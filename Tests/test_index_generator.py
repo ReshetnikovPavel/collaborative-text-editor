@@ -1,5 +1,6 @@
 import unittest
-from index_generator import Identifier, Position, Char
+from typing import List
+from index_generator import Identifier, Position, Decimal
 
 
 class Base(unittest.TestCase):
@@ -89,10 +90,6 @@ class TestPosition(Base):
 
         self.assertEqual(position.ids, ids)
 
-    def test_init_with_no_ids(self):
-        with self.assertRaises(ValueError):
-            Position([])
-
     def test_get_head(self):
         position = Position([Identifier(1, 0), Identifier(2, 1)])
 
@@ -128,15 +125,131 @@ class TestPosition(Base):
 
         self.assertTrue(position1 > position2)
 
+    def test_convert_to_custom_decimal(self):
+        ids = Position([Identifier(1, 0), Identifier(2, 1)])
 
-class TestChar(Base):
+        actual = ids.convert_to_custom_decimal()
+
+        self.assertTrue(actual.digits == [1, 2])
+
+    def assert_generate_between(self, first: Position, second: Position):
+        site_id = 1
+
+        actual = Position.generate_between(first, second, site_id)
+
+        self.assertTrue(first < actual < second)
+
+    def test_generate_between(self):
+        self.assert_generate_between(
+            Position([Identifier(1, 0), Identifier(1, 2)]),
+            Position([Identifier(1, 0), Identifier(2, 1)]))
+
+    def test_generate_between2(self):
+        self.assert_generate_between(
+            Position([Identifier(1, 0)]),
+            Position([Identifier(1, 1)]))
+
+    def test_generate_between3(self):
+        self.assert_generate_between(
+            Position([Identifier(1, 0)]),
+            Position([Identifier(1, 0), Identifier(2, 3)]))
+
+    def test_generate_between4(self):
+        with self.assertRaises(ValueError):
+            self.assert_generate_between(
+                Position([Identifier(2, 0)]),
+                Position([Identifier(1, 0), Identifier(2, 3)]))
+
+
+class TestCustomDecimal(Base):
     def test_init(self):
-        position = Position([Identifier(1, 0), Identifier(2, 1)])
-        lamport_clock_value = 0
-        value = 'a'
+        digits = [1, 2, 3, 4, 5]
 
-        char = Char(position, lamport_clock_value, value)
+        decimal = Decimal(digits)
 
-        self.assertEqual(char.position, position)
-        self.assertEqual(char.lamport_clock_value, lamport_clock_value)
-        self.assertEqual(char.value, value)
+        self.assertTrue(decimal.digits == digits)
+
+    def test_convert_to_position(self):
+        previous_pos = Position([Identifier(1, 0), Identifier(2, 1)])
+        next_pos = Position([Identifier(1, 2), Identifier(2, 2)])
+        decimal = Decimal([1, 2, 3])
+
+        actual = decimal.convert_to_position_between(previous_pos, next_pos, 2)
+
+        self.assertEqual(
+            actual.ids, [Identifier(1, 0), Identifier(2, 1), Identifier(3, 2)])
+
+    def assert_add(self, first: List[int], second: List[int],
+                   expected: List[int]):
+        first = Decimal(first)
+        second = Decimal(second)
+
+        actual = (first + second).digits
+
+        self.assertEqual(expected, actual)
+
+    def test_add_zeros(self):
+        self.assert_add([0, 0], [0, 0], [0, 0])
+
+    def test_add_without_carry(self):
+        self.assert_add([5, 5], [5, 6], [10, 11])
+
+    def test_add_with_carry(self):
+        base = Decimal.Base
+        self.assert_add([base - 2, base // 2],
+                        [0, (base // 2) + 1],
+                        [base - 1, 1])
+
+    def test_add_overflow(self):
+        base = Decimal.Base
+        with self.assertRaises(ValueError):
+            self.assert_add([base - 1, base - 1], [0, 1], [base, 0])
+
+    def test_add_different_length(self):
+        self.assert_add([1, 2], [1, 2, 3, 4], [2, 4, 3, 4])
+
+    def assert_plus_number_less_than(self, first: List[int],
+                                     second: List[int]):
+        decimal = Decimal(first)
+        delta = Decimal(second)
+
+        actual = decimal.plus_number_less_than(delta)
+
+        self.assertTrue(actual < decimal + delta,
+                        f"{actual} should have been less than {decimal}")
+        self.assertTrue(actual > decimal,
+                        f"{actual} should have been greater than {decimal}")
+
+    def test_plus_number_less_than_the_same(self):
+        self.assert_plus_number_less_than([1], [1])
+
+    def test_plus_number_less_than(self):
+        self.assert_plus_number_less_than([1, 0, 3, 4], [0, 0, 1])
+
+    def assert_sub(self, first: List[int],
+                   second: List[int],
+                   expected: List[int]):
+        first = Decimal(first)
+        second = Decimal(second)
+
+        actual = (first - second).digits
+
+        self.assertTrue(actual == expected)
+
+    def test_sub_zeros(self):
+        self.assert_sub([0, 0], [0, 0], [0, 0])
+
+    def test_sub_without_carry(self):
+        self.assert_sub([11, 4], [3, 2], [11 - 3, 4 - 2])
+
+    def test_sub_with_carry(self):
+        base = Decimal.Base
+        self.assert_sub([11, 2], [3, 4], [11 - 3 - 1, base - 2])
+
+    def test_sub_different_length(self):
+        base = Decimal.Base
+        self.assert_sub([1], [0, 1], [0, base - 1])
+
+    def test_sub_lesser_minus_greater(self):
+        with self.assertRaises(ValueError):
+            self.assert_sub([0, 1], [1, 0], [])
