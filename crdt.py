@@ -1,5 +1,8 @@
+from typing import Generator
+
 from py3crdt.sequence import Sequence
-from index_generator import Position
+from position_generator import Position
+from glyphs import Glyph
 
 
 class CRDT:
@@ -10,11 +13,16 @@ class CRDT:
     def site_id(self) -> int:
         return self._seq.id
 
-    def insert(self, element, position: Position):
+    def insert(self, element: Glyph, position: Position):
         self._seq.add(element, position)
 
-    def remove(self, element):
-        self._seq.remove(element)
+    def insert_many(self, elements: Generator[Glyph, None, None],
+                    positions: Generator[Position, None, None]):
+        for element, position in zip(elements, positions):
+            self.insert(element, position)
+
+    def remove(self, position: Position):
+        self._seq.remove(position)
 
     def merge(self, other: 'CRDT'):
         self._seq.merge(other._seq)

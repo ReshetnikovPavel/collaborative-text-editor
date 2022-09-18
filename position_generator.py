@@ -1,4 +1,49 @@
-from typing import List
+from typing import List, Generator
+
+
+def generate(amount: int, site: int) -> Generator['Position', None, None]:
+    start = Position.get_min(site)
+    end = Position.get_max(site)
+
+    current = generate_between(start, end, site)
+    yield current
+
+    for i in range(amount - 1):
+        current = generate_between(current, end, site)
+        yield current
+
+
+def generate_between(start: 'Position',
+                     end: 'Position',
+                     site: int) -> 'Position':
+    head_start = start.head if start.has_head else Identifier.get_min(site)
+    head_end = end.head if end.has_head else Identifier.get_max(site)
+
+    if head_start.digit != head_end.digit:
+        return _generate_between_arithmetically(start, end, site)
+
+    if head_start.site < head_end.site:
+        without_head = generate_between(start.without_head, Position([]), site)
+        return Position([head_start]) + without_head
+
+    if head_start.site == head_end.site:
+        without_head = generate_between(start.without_head,
+                                        end.without_head, site)
+        return Position([head_start]) + without_head
+
+    raise ValueError('Invalid site ordering')
+
+
+def _generate_between_arithmetically(start: 'Position',
+                                     end: 'Position',
+                                     site: int) -> 'Position':
+    start_number = start.convert_to_custom_decimal()
+    end_number = end.convert_to_custom_decimal()
+
+    delta = end_number - start_number
+    next_number = start_number.plus_number_less_than(delta)
+
+    return next_number.convert_to_position_between(start, end, site)
 
 
 class Position:
@@ -32,48 +77,31 @@ class Position:
     def has_head(self):
         return len(self.ids) > 0
 
-    @staticmethod
-    def generate_between(start: 'Position',
-                         end: 'Position',
-                         site: int) -> 'Position':
-        head_start = start.head if start.has_head else Identifier(0, site)
-        head_end = end.head if end.has_head else Identifier(Decimal.Base, site)
-
-        if head_start.digit != head_end.digit:
-            return Position._generate_between_arithmetically(start, end, site)
-
-        if head_start.site < head_end.site:
-            without_head = Position.generate_between(start.without_head,
-                                                     Position([]), site)
-            return Position([head_start]) + without_head
-
-        if head_start.site == head_end.site:
-            without_head = Position.generate_between(start.without_head,
-                                                     end.without_head, site)
-            return Position([head_start]) + without_head
-
-        raise ValueError('Invalid site ordering')
-
-    @staticmethod
-    def _generate_between_arithmetically(start: 'Position',
-                                         end: 'Position',
-                                         site: int) -> 'Position':
-        start_number = start.convert_to_custom_decimal()
-        end_number = end.convert_to_custom_decimal()
-
-        delta = end_number - start_number
-        next_number = start_number.plus_number_less_than(delta)
-
-        return next_number.convert_to_position_between(start, end, site)
-
     def convert_to_custom_decimal(self) -> 'Decimal':
         return Decimal(list(map(lambda x: x.digit, self.ids)))
+
+    @staticmethod
+    def get_min(site: int) -> 'Position':
+        return Position([Identifier.get_min(site)])
+
+    @staticmethod
+    def get_max(site: int) -> 'Position':
+        return Position([Identifier.get_max(site)])
 
 
 class Identifier:
     def __init__(self, digit: int, site: int):
+        self._check_digit(digit)
         self.digit = digit
         self.site = site
+
+    @staticmethod
+    def _check_digit(digit: int):
+        if digit > Decimal.Base:
+            raise ValueError(f'Digit cannot be greater than'
+                             f' Decimal.Base = {Decimal.Base}')
+        if digit < 0:
+            raise ValueError('Digit cannot be negative')
 
     def __lt__(self, other: 'Identifier') -> bool:
         if self.digit < other.digit:
@@ -87,6 +115,14 @@ class Identifier:
 
     def __repr__(self):
         return f'Identifier({self.digit}, {self.site})'
+
+    @staticmethod
+    def get_min(site: int) -> 'Identifier':
+        return Identifier(0, site)
+
+    @staticmethod
+    def get_max(site: int) -> 'Identifier':
+        return Identifier(Decimal.Base, site)
 
 
 class Decimal:
@@ -151,6 +187,9 @@ class Decimal:
     def _get_first_nonzero(self) -> int:
         return next((i for i, x in enumerate(self.digits) if x != 0), None)
 
+    # TODO: Мне кажется, что можно оптимизировать память,
+    # если во втором и третьем случае не создавать новый объект.
+    # Все равно их никто не изменяет
     def convert_to_position_between(self,
                                     before: Position,
                                     after: Position,

@@ -1,6 +1,8 @@
 import unittest
+import position_generator
+
 from typing import List
-from index_generator import Identifier, Position, Decimal
+from position_generator import Identifier, Position, Decimal
 
 
 class Base(unittest.TestCase):
@@ -81,6 +83,36 @@ class TestIdentifier(Base):
 
         self.assertTrue(identifier1 == identifier2)
 
+    def test_check_digit_too_big(self):
+        digit = Decimal.Base + 1
+        site = 0
+
+        with self.assertRaises(ValueError):
+            Identifier(digit, site)
+
+    def test_check_digit_negative(self):
+        digit = -1
+        site = 0
+
+        with self.assertRaises(ValueError):
+            Identifier(digit, site)
+
+    def test_get_min(self):
+        site = 0
+        expected = Identifier(0, site)
+
+        actual = Identifier.get_min(site)
+
+        self.assertEqual(actual, expected)
+
+    def test_get_max(self):
+        site = 0
+        expected = Identifier(Decimal.Base, site)
+
+        actual = Identifier.get_max(site)
+
+        self.assertEqual(actual, expected)
+
 
 class TestPosition(Base):
     def test_init(self):
@@ -135,7 +167,7 @@ class TestPosition(Base):
     def assert_generate_between(self, first: Position, second: Position):
         site_id = 1
 
-        actual = Position.generate_between(first, second, site_id)
+        actual = position_generator.generate_between(first, second, site_id)
 
         self.assertTrue(first < actual < second)
 
@@ -159,6 +191,46 @@ class TestPosition(Base):
             self.assert_generate_between(
                 Position([Identifier(2, 0)]),
                 Position([Identifier(1, 0), Identifier(2, 3)]))
+
+    def test_generate_between_can_handle_many(self):
+        end = Position([Identifier.get_max(1)])
+        first_pos = position_generator.generate_between(
+            Position([Identifier.get_min(1)]), end, 1)
+        second_pos = position_generator.generate_between(first_pos, end, 1)
+        for i in range(100000):
+            first_pos = second_pos
+            second_pos = position_generator.generate_between(first_pos, end, 1)
+        print(second_pos)
+
+    def test_get_max(self):
+        site = 0
+        expected = Position([Identifier.get_max(site)])
+
+        actual = Position.get_max(site)
+
+        self.assertEqual(actual, expected)
+
+    def test_get_min(self):
+        site = 0
+        expected = Position([Identifier.get_min(site)])
+
+        actual = Position.get_min(site)
+
+        self.assertEqual(actual, expected)
+
+    def assert_generate(self, amount, site_id, expected):
+        actual = list(position_generator.generate(amount, site_id))
+
+        self.assertEqual(actual, expected)
+
+    def test_generate_one(self):
+        self.assert_generate(1, 0,
+                             [Position([Identifier(0, 0), Identifier(1, 0)])])
+
+    def test_generate_two(self):
+        self.assert_generate(2, 0,
+                             [Position([Identifier(0, 0), Identifier(1, 0)]),
+                              Position([Identifier(0, 0), Identifier(2, 0)])])
 
 
 class TestCustomDecimal(Base):
