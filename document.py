@@ -1,3 +1,5 @@
+from typing import List
+
 import glyphs
 import position_generator
 from crdt import CRDT
@@ -5,33 +7,34 @@ from position_generator import Position
 
 
 class Document:
-    def __init__(self, string: str, site_id: int):
-        self.crdt = CRDT(site_id)
-        self.string = string
-        self.converter = IndexPositionConverter(self.crdt, self.site_id)
-        if string != '':
+    def __init__(self, glyphs: List[glyphs.Glyph], site_id: int):
+        self._crdt = CRDT(site_id)
+        self._glyphs = glyphs
+        self._converter = IndexPositionConverter(self._crdt, self.site_id)
+        if glyphs:
             self._assign_positions()
 
     def _assign_positions(self):
-        positions = position_generator.generate(len(self.string), self.site_id)
-        self.crdt.insert_many(glyphs.get_from(self.string), positions)
+        positions = position_generator.generate(len(self._glyphs),
+                                                self.site_id)
+        self._crdt.insert_many(self._glyphs, positions)
 
     @property
     def site_id(self) -> int:
-        return self.crdt.site_id
+        return self._crdt.site_id
 
     def insert(self, element: glyphs.Glyph, index: int):
-        position = self.converter.generate_new_position(index)
-        self.crdt.insert(element, position)
-        self._update_string_local()
+        position = self._converter.generate_new_position(index)
+        self._crdt.insert(element, position)
+        self._update_glyphs_local()
 
     def remove(self, index: int):
-        position = self.converter.convert_index_to_position(index)
-        self.crdt.remove(position)
-        self._update_string_local()
+        position = self._converter.convert_index_to_position(index)
+        self._crdt.remove(position)
+        self._update_glyphs_local()
 
-    def _update_string_local(self):
-        self.string = ''.join([glyph.draw() for glyph in self.crdt.elements])
+    def _update_glyphs_local(self):
+        self._glyphs = self._crdt.elements
 
 
 class IndexPositionConverter:

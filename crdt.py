@@ -27,7 +27,7 @@ class CRDT:
             raise ValueError(f'Position already exists: {position}')
         self._seq.add(element, position)
 
-    def insert_many(self, elements: Generator[Glyph, None, None],
+    def insert_many(self, elements: List[Glyph],
                     positions: Generator[Position, None, None]):
         for element, position in zip(elements, positions):
             self.insert(element, position)

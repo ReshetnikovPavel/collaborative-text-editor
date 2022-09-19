@@ -20,3 +20,11 @@ class TestFunctions(Base):
 
         self.assertEqual(
             values, ['H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd'])
+
+    def test_to_string(self):
+        string = 'Hello World'
+        glyphs_list = list(glyphs.get_from(string))
+
+        actual_string = glyphs.to_string(glyphs_list)
+
+        self.assertEqual(actual_string, string)

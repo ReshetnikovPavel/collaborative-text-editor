@@ -38,3 +38,7 @@ class CompositeGlyph(Glyph):
 def get_from(string: str) -> Generator[Glyph, None, None]:
     for char in string:
         yield Character(char)
+
+
+def to_string(glyphs: List[Glyph]) -> str:
+    return ''.join([glyph.draw() for glyph in glyphs])
