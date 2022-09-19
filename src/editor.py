@@ -1,4 +1,6 @@
+from utils import parse_args
 import curses
+import sys
 
 
 class Window:
@@ -13,6 +15,33 @@ class Cursor:
     @property
     def position(self) -> tuple[int, int]:
         return self.__row, self.__col
+
+    def up(self, buffer):
+        if self.__row > 0:
+            self.__row -= 1
+            self.__push_cursor_to_end_of_line(buffer)
+
+    def down(self, buffer):
+        if self.__row < len(buffer) - 1:
+            self.__row += 1
+            self.__push_cursor_to_end_of_line(buffer)
+
+    def left(self, buffer):
+        if self.__col > 0:
+            self.__col -= 1
+        elif self.__row > 0:
+            self.__row -= 1
+            self.__col = len(buffer[self.__row])
+
+    def right(self, buffer):
+        if self.__col < len(buffer[self.__row]):
+            self.__col += 1
+        elif self.__row < len(buffer) - 1:
+            self.__row += 1
+            self.__col = 0
+
+    def __push_cursor_to_end_of_line(self, buffer):
+        self.__col = min(self.__col, len(buffer[self.__row]))
 
 
 class Buffer:
@@ -51,7 +80,31 @@ class Buffer:
 
 
 def main(stdscr):
-    pass
+    args = parse_args("filename")
+
+    with open(args.filename) as f:
+        buffer = Buffer(f.read())
+
+    cursor = Cursor()
+
+    while True:
+        stdscr.erase()
+        for row, line in enumerate(buffer):
+            stdscr.addstr(row, 0, line)
+
+        stdscr.move(*cursor.position)
+
+        k = stdscr.getkey()
+        if k == "q":
+            sys.exit(0)
+        elif k == "KEY_UP":
+            cursor.up(buffer)
+        elif k == "KEY_DOWN":
+            cursor.down(buffer)
+        elif k == "KEY_LEFT":
+            cursor.left(buffer)
+        elif k == "KEY_RIGHT":
+            cursor.right(buffer)
 
 
 if __name__ == "__main__":
