@@ -121,6 +121,9 @@ class Buffer:
 
 
 def main(stdscr):
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
+    stdscr.bkgd(' ', curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE)
+
     args = parse_args("filename")
 
     with open(args.filename) as f:
