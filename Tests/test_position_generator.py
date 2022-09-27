@@ -1,8 +1,8 @@
 import unittest
-import position_generator
+from src import position_generator
 
 from typing import List
-from position_generator import Identifier, Position, Decimal
+from src.position_generator import Identifier, Position, Decimal
 
 
 class Base(unittest.TestCase):

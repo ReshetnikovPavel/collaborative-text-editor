@@ -2,7 +2,7 @@ from typing import List
 
 import glyphs
 import position_generator
-from crdt import CRDT
+from src.crdt import CRDT
 from position_generator import Position
 
 

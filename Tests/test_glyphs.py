@@ -1,6 +1,6 @@
 import unittest
 
-import glyphs
+from src import glyphs
 
 
 class Base(unittest.TestCase):

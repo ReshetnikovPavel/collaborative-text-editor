@@ -1,10 +1,10 @@
 import unittest
 from typing import List
 
-import glyphs
-from document import Document
-from glyphs import Character
-from position_generator import Position, Identifier
+from src import glyphs
+from src.document import Document
+from src.glyphs import Character
+from src.position_generator import Position, Identifier
 
 
 class Base(unittest.TestCase):

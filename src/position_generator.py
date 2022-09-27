@@ -88,7 +88,6 @@ class Position:
     def get_max(site: int) -> 'Position':
         return Position([Identifier.get_max(site)])
 
-
 class Identifier:
     def __init__(self, digit: int, site: int):
         self._check_digit(digit)
