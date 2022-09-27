@@ -1,6 +1,7 @@
-from utils import parse_args
 import curses
 import sys
+
+from utils import parse_args
 
 
 class Window:
@@ -85,7 +86,7 @@ class Cursor:
 
 class Buffer:
     def __init__(self, text=""):
-        self.__lines = text.split('\n')
+        self.__lines = text.split("\n")
 
     def __getitem__(self, index: int) -> str:
         return self.__lines[index]
@@ -120,59 +121,70 @@ class Buffer:
         self.__lines.insert(row, current + next_line)
 
 
-def main(stdscr):
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
-    stdscr.bkgd(' ', curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE)
+class Editor:
+    def __init__(self, stdscr, text: str) -> None:
+        self.__stdscr = stdscr
+        self.__buffer = Buffer(text)
+        self.__cursor = Cursor()
+        self.__window = Window(curses.LINES, curses.COLS - 1)
 
-    args = parse_args("filename")
+    def __set_color_scheme(self) -> None:
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
+        self.__stdscr.bkgd(" ", curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE)
 
-    with open(args.filename) as f:
-        buffer = Buffer(f.read())
+    def __draw_text(self) -> None:
+        for row, line in enumerate(self.__buffer[self.__window.row: self.__window.row + self.__window.num_rows]):
+            self.__stdscr.addstr(row, 0, line)
 
-    window = Window(curses.LINES - 1, curses.COLS - 1)
-    cursor = Cursor()
+    def __draw_screen(self) -> None:
+        self.__stdscr.clear()
+        self.__draw_text()
+        self.__stdscr.move(*self.__window.get_translated_cursor_coordinates(self.__cursor))
+        self.__stdscr.refresh()
 
-    while True:
-        stdscr.erase()
-        for row, line in enumerate(
-                buffer[window.row:window.row + window.num_rows]):
-            if row == cursor.row - window.row and window.col > 0:
-                line = "«" + line[window.col + 1:]
-            if len(line) > window.num_cols:
-                line = line[:window.num_cols - 1] + "»"
-            stdscr.addstr(row, 0, line)
-
-        stdscr.move(*window.get_translated_cursor_coordinates(cursor))
-
-        k = stdscr.getkey()
-        if k == "q":
-            sys.exit(0)
-        elif k == "KEY_UP":
-            cursor.up(buffer)
-            window.up(cursor)
-            window.horizontal_scroll(cursor)
-        elif k == "KEY_DOWN":
-            cursor.down(buffer)
-            window.down(buffer, cursor)
-            window.horizontal_scroll(cursor)
-        elif k == "KEY_LEFT":
-            cursor.left(buffer)
-            window.up(cursor)
-            window.horizontal_scroll(cursor)
-        elif k == "KEY_RIGHT":
-            cursor.right(buffer)
-            window.down(buffer, cursor)
-            window.horizontal_scroll(cursor)
-        elif k == "KEY_BACKSPACE":
-            cursor.left(buffer)
-            buffer.delete(cursor)
-        elif k == "\n":
-            buffer.split(cursor)
-            cursor.right(buffer)
+    def __handle_keypress(self, key: int) -> None:
+        if key == curses.KEY_UP:
+            self.__cursor.up(self.__buffer)
+            self.__window.up(self.__cursor)
+            self.__window.horizontal_scroll(self.__cursor)
+        elif key == curses.KEY_DOWN:
+            self.__cursor.down(self.__buffer)
+            self.__window.down(self.__buffer, self.__cursor)
+            self.__window.horizontal_scroll(self.__cursor)
+        elif key == curses.KEY_LEFT:
+            self.__cursor.left(self.__buffer)
+            self.__window.up(self.__cursor)
+            self.__window.horizontal_scroll(self.__cursor)
+        elif key == curses.KEY_RIGHT:
+            self.__cursor.right(self.__buffer)
+            self.__window.down(self.__buffer, self.__cursor)
+            self.__window.horizontal_scroll(self.__cursor)
+        elif key == curses.KEY_BACKSPACE:
+            self.__buffer.delete(self.__cursor)
+        elif key == curses.KEY_DC:
+            self.__buffer.delete(self.__cursor, count=1)
+        elif key == curses.KEY_ENTER or key == 10:
+            self.__buffer.split(self.__cursor)
+        elif key == curses.KEY_RESIZE:
+            self.__window = Window(curses.LINES - 1, curses.COLS - 1)
         else:
-            buffer.insert(cursor, k)
-            for _ in k:
-                cursor.right(buffer)
+            self.__buffer.insert(self.__cursor, chr(key))
+
+    def run(self) -> None:
+        self.__set_color_scheme()
+        self.__draw_screen()
+        while True:
+            key = self.__stdscr.getch()
+            self.__handle_keypress(key)
+            self.__draw_screen()
+
+
+def main(stdscr):
+    args = parse_args("filename")
+    with open(args.filename) as f:
+        text = f.read()
+    editor = Editor(stdscr, text)
+    editor.run()
 
 
 if __name__ == "__main__":
