@@ -1,7 +1,7 @@
 import unittest
-from crdt import CRDT
-from position_generator import Position, Identifier
-from glyphs import Character
+from src.crdt import CRDT
+from src.position_generator import Position, Identifier
+from src.glyphs import Character
 
 
 class Base(unittest.TestCase):

@@ -1,13 +1,14 @@
 from typing import List
+from uuid import UUID
 
-import glyphs
-import position_generator
-from crdt import CRDT
-from position_generator import Position
+import src.glyphs as glyphs
+import src.position_generator as position_generator
+from src.crdt import CRDT
+from src.position_generator import Position
 
 
 class Document:
-    def __init__(self, glyphs: List[glyphs.Glyph], site_id: int):
+    def __init__(self, glyphs: List[glyphs.Glyph], site_id: UUID):
         self._crdt = CRDT(site_id)
         self._glyphs = glyphs
         self._converter = IndexPositionConverter(self._crdt, self.site_id)
@@ -35,6 +36,10 @@ class Document:
 
     def _update_glyphs_local(self):
         self._glyphs = self._crdt.elements
+
+    def update_crdt(self, other_crdt: CRDT):
+        self._crdt.merge(other_crdt)
+        self._update_glyphs_local()
 
 
 class IndexPositionConverter:

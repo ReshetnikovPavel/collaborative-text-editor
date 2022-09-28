@@ -1,13 +1,14 @@
 from typing import Generator, List
+from uuid import UUID
 
 from py3crdt.sequence import Sequence
 
-from glyphs import Glyph
-from position_generator import Position
+from src.glyphs import Glyph
+from src.position_generator import Position
 
 
 class CRDT:
-    def __init__(self, site_id: int):
+    def __init__(self, site_id: UUID):
         self._seq = Sequence(site_id)
 
     @property
