@@ -40,3 +40,7 @@ class CRDT:
 
     def merge(self, other: 'CRDT'):
         self._seq.merge(other._seq)
+
+    def __repr__(self):
+        return f'CRDT({self._seq})'
+

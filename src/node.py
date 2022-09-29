@@ -1,21 +1,18 @@
-from typing import List
-from src.crdt import CRDT
+from uuid import UUID
 
 from p2pnetwork import node
-import uuid
 
-from src.document import Document
-
-
-def _generate_unique_id() -> uuid.UUID:
-    return uuid.uuid4()
+from src.crdt import CRDT
 
 
 class Node(node.Node):
-    def __init__(self, controller: 'Controller', host: str, port: int, id=None, callback=None, max_connections=0):
+    def __init__(self, controller: 'Controller',
+                 host: str, port: int, id: UUID,
+                 callback=None, max_connections=0):
         super(Node, self).__init__(host, port, id, callback, max_connections)
         self.controller = controller
-        self.buffer = []
+        self.buffer = b''
+        self.message_size = 0
 
     def outbound_node_connected(self, node):
         super().outbound_node_connected(node)
@@ -26,9 +23,13 @@ class Node(node.Node):
         self.process_data(data)
 
     def process_data(self, data):
-        if isinstance(data, CRDT):
+        if isinstance(data, int):
+            self.message_size = data
+        elif isinstance(data, bytes):
             self.controller.update_crdt(data)
-        else:
-            self.buffer.append(data)
+
+
+
+
 
 
