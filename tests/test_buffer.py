@@ -17,8 +17,8 @@ class TestBuffer(unittest.TestCase):
     def test_len(self) -> None:
         self.assertEqual(len(self.buffer), len(self.split_text))
 
-    def test_join(self) -> None:
-        self.assertEqual("\n".join(self.buffer), self.text)
+    def test_bottom_property(self) -> None:
+        self.assertEqual(self.buffer.bottom, len(self.split_text) - 1)
 
     def test_insert_in_the_beginning(self) -> None:
         self.buffer.insert(Cursor(0, 0), "0 line")
