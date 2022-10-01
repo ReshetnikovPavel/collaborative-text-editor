@@ -27,3 +27,10 @@ class Model:
 
     def update_crdt(self, pickled_crdt: bytes):
         self.current_document.update_crdt(pickled_crdt)
+
+    def delete_current_document(self):
+        try:
+            self.documents.remove(self.current_document)
+        except Exception as e:
+            pass
+        self.current_document = Document([], self.site_id)

@@ -1,3 +1,4 @@
+import contextlib
 from random import randint
 import socket
 from typing import List
@@ -45,14 +46,23 @@ class Controller:
         self.view.update(document)
 
     def connect_to(self, host: str, port: int):
+        self.model.delete_current_document()
         self.node.connect_with_node(host, port)
-
-    def insert(self, glyph: Glyph, position: int):
-        document = self.model.get_document()
-        document.insert(glyph, position)
-        self.view.update(self.model.get_document())
-        self.send_crdt(document.crdt)
 
     def on_someone_joined(self):
         self.send_crdt(self.model.get_document().crdt)
 
+    def insert(self, glyph: Glyph, position: int):
+        with self.document_to_be_updated() as document:
+            document.insert(glyph, position)
+
+    def remove(self, position: int):
+        with self.document_to_be_updated() as document:
+            document.remove(position)
+
+    @contextlib.contextmanager
+    def document_to_be_updated(self):
+        document = self.model.get_document()
+        yield document
+        self.view.update(self.model.get_document())
+        self.send_crdt(document.crdt)

@@ -159,3 +159,39 @@ class TestController(Base):
         expected = 'Haello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
+
+    def test_remove(self):
+        controller2 = self.prepare_another_controller('Hello World')
+        host = controller2.node.host
+        port = controller2.node.port
+
+        time.sleep(2)
+        self.controller.connect_to(host, port)
+
+        time.sleep(2)
+
+        self.controller.remove(1)
+
+        time.sleep(2)
+
+        actual = src.glyphs.to_string(controller2.view.document._glyphs)
+        expected = 'Hllo World'
+        self.assertEqual(actual, expected)
+        controller2.node.stop()
+
+    def test_initial_text_is_gone_if_connected_to_another(self):
+        self.controller.insert(src.glyphs.Character('a'), 0)
+        self.controller.insert(src.glyphs.Character('b'), 1)
+        controller2 = self.prepare_another_controller('Hello World')
+        host = controller2.node.host
+        port = controller2.node.port
+
+        time.sleep(2)
+        self.controller.connect_to(host, port)
+
+        time.sleep(2)
+
+        actual = src.glyphs.to_string(self.controller.view.document._glyphs)
+        expected = 'Hello World'
+        self.assertEqual(actual, expected)
+        controller2.node.stop()
