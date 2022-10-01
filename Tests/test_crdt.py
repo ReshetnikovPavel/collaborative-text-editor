@@ -21,19 +21,19 @@ class TestCRDT(Base):
     def test_elements_empty(self):
         crdt = CRDT(0)
 
-        self.assertEqual(crdt.elements, [])
+        self.assertEqual(crdt.get_elements(), [])
 
     def test_positions_empty(self):
         crdt = CRDT(0)
 
-        self.assertEqual(crdt.positions, [])
+        self.assertEqual(crdt.get_positions(), [])
 
     def test_elements(self):
         crdt = CRDT(0)
         char = Character('a')
         crdt.insert(char, Position([Identifier(0, 0)]))
 
-        self.assertEqual(crdt.elements, [char])
+        self.assertEqual(crdt.get_elements(), [char])
 
     def test_positions(self):
         crdt = CRDT(0)
@@ -41,7 +41,7 @@ class TestCRDT(Base):
         position = Position([Identifier(0, 0)])
         crdt.insert(char, position)
 
-        self.assertEqual(crdt.positions, [position])
+        self.assertEqual(crdt.get_positions(), [position])
 
     def test_insert(self):
         crdt = CRDT(0)
@@ -50,8 +50,8 @@ class TestCRDT(Base):
 
         crdt.insert(char, position)
 
-        self.assertEqual(crdt.elements, [char])
-        self.assertEqual(crdt.positions, [position])
+        self.assertEqual(crdt.get_elements(), [char])
+        self.assertEqual(crdt.get_positions(), [position])
 
     def test_remove(self):
         crdt = CRDT(0)
@@ -61,8 +61,8 @@ class TestCRDT(Base):
 
         crdt.remove(position)
 
-        self.assertEqual(crdt.elements, [])
-        self.assertEqual(crdt.positions, [])
+        self.assertEqual(crdt.get_elements(), [])
+        self.assertEqual(crdt.get_positions(), [])
 
     def test_merge(self):
         crdt1 = CRDT(0)
@@ -73,13 +73,14 @@ class TestCRDT(Base):
         crdt1.insert(char, position1)
         crdt2.insert(char, position2)
 
-        crdt1.merge(crdt2)
+        pickled_crdt2 = crdt2.pickle()
+        crdt1.merge(pickled_crdt2)
 
-        self.assertEqual(crdt1.elements, [char, char])
-        self.assertEqual(crdt1.positions, [position1, position2])
+        self.assertEqual(crdt1.get_elements(), [char, char])
+        self.assertEqual(crdt1.get_positions(), [position1, position2])
 
-        self.assertEqual(crdt2.elements, [char])
-        self.assertEqual(crdt2.positions, [position2])
+        self.assertEqual(crdt2.get_elements(), [char])
+        self.assertEqual(crdt2.get_positions(), [position2])
 
     def test_insert_already_exists(self):
         crdt = CRDT(0)
@@ -87,14 +88,14 @@ class TestCRDT(Base):
         position = Position([Identifier(0, 0)])
         crdt.insert(char, position)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(KeyError):
             crdt.insert(char, position)
 
     def test_remove_do_not_exist(self):
         crdt = CRDT(0)
         position = Position([Identifier(0, 0)])
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(KeyError):
             crdt.remove(position)
 
 

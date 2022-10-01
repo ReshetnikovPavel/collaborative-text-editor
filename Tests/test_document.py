@@ -24,7 +24,7 @@ class TestDocument(Base):
 
         self.assertEqual(glyphs.to_string(document._glyphs), string)
         self.assertEqual(document._crdt.site_id, 0)
-        self.assertTrue(len(document._crdt.positions) != 0)
+        self.assertTrue(len(document._crdt.get_positions()) != 0)
 
     def assert_glyphs_equal_to_string(self, glyphs_list: List[glyphs.Glyph],
                                       string: str):
@@ -189,7 +189,8 @@ class TestDocument(Base):
                     Position([Identifier(0, 0), Identifier(3, 0)]))
         document.insert(Character('a'), 0)
         document.insert(Character('b'), 1)
-        document.update_crdt(crdt)
+        pickled_crdt = crdt.pickle()
+        document.update_crdt(pickled_crdt)
         self.assert_glyphs_equal_to_string(document._glyphs, 'abcab')
 
     def test_uuid(self):
@@ -205,7 +206,8 @@ class TestDocument(Base):
         document2.insert(Character('y'), 1)
         document2.insert(Character('z'), 2)
 
-        document.update_crdt(document2._crdt)
+        pickled_crdt2 = document2._crdt.pickle()
+        document.update_crdt(pickled_crdt2)
 
         first_part = ''.join(map(lambda x: x.draw(), document._glyphs[:3]))
         second_part = ''.join(map(lambda x: x.draw(), document._glyphs[3:]))

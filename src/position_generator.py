@@ -62,6 +62,9 @@ class Position:
     def __add__(self, other: 'Position') -> 'Position':
         return Position(self.ids + other.ids)
 
+    def __hash__(self):
+        return hash(tuple(self.ids))
+
     def __repr__(self):
         return f'Position({self.ids})'
 
@@ -115,6 +118,9 @@ class Identifier:
 
     def __repr__(self):
         return f'Identifier({self.digit}, {self.site})'
+
+    def __hash__(self):
+        return hash((self.digit, self.site))
 
     @staticmethod
     def get_min(site: int) -> 'Identifier':

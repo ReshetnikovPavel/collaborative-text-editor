@@ -31,13 +31,12 @@ class Controller:
         self.node.start()
 
     def update_crdt(self, pickled_crdt: bytes):
-        crdt = pickle.loads(pickled_crdt)
-        self.model.update_crdt(crdt)
+        self.model.update_crdt(pickled_crdt)
         document = self.model.get_document()
         self.view.update(document)
 
     def send_crdt(self, crdt: CRDT):
-        pickled_crdt = pickle.dumps(crdt)
+        pickled_crdt = crdt.pickle()
         self.node.send_to_nodes(str(len(pickled_crdt)))
         self.node.send_to_nodes(pickled_crdt, compression="zlib")
 
@@ -47,3 +46,13 @@ class Controller:
 
     def connect_to(self, host: str, port: int):
         self.node.connect_with_node(host, port)
+
+    def insert(self, glyph: Glyph, position: int):
+        document = self.model.get_document()
+        document.insert(glyph, position)
+        self.view.update(self.model.get_document())
+        self.send_crdt(document.crdt)
+
+    def on_someone_joined(self):
+        self.send_crdt(self.model.get_document().crdt)
+

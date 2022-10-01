@@ -22,8 +22,8 @@ class Model:
         self.current_document = document
         return document
 
-    def get_document(self):
+    def get_document(self) -> Document:
         return self.current_document
 
-    def update_crdt(self, crdt: CRDT):
-        self.current_document.update_crdt(crdt)
+    def update_crdt(self, pickled_crdt: bytes):
+        self.current_document.update_crdt(pickled_crdt)

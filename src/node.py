@@ -17,6 +17,12 @@ class Node(node.Node):
     def outbound_node_connected(self, node):
         super().outbound_node_connected(node)
         print(f"{self.id}: Node {node.id} connected")
+        #self.controller.on_someone_joined()
+
+    def inbound_node_connected(self, node):
+        super().inbound_node_connected(node)
+        print(f"{self.id}: Node {node.id} connected")
+        self.controller.on_someone_joined()
 
     def node_message(self, node, data):
         print(f"{self.id}: Node {node.id} sent: {data}")

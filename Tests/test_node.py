@@ -38,30 +38,3 @@ class TestNode(Base):
 
         node_1.stop()
         node_2.stop()
-
-    def test_send_message(self):
-        node_1 = Node(None, "127.0.0.1", 8001, 1)
-        node_2 = Node(None, "127.0.0.1", 8002, 2)
-
-        node_1.start()
-        node_2.start()
-
-        time.sleep(2)
-
-        node_1.connect_with_node('127.0.0.1', 8002)
-
-        time.sleep(2)
-
-        node_1.send_to_nodes('Hello World')
-
-        #print(node_2.buffer)
-        #self.assertTrue('Hello World' in node_2.buffer)
-
-    # def test_send_crdt(self):
-    #
-    #     client_1.node.connect_with_node(client_2.node.host, client_2.node.port)
-    #
-    #     time.sleep(2)
-    #
-    #     client_1.document.insert('Hello World')
-
