@@ -1,37 +1,35 @@
 import pickle
-from typing import Generator, List, Set
+from typing import Generator, List
 from uuid import UUID
 
-from sortedcontainers import SortedDict
+from py3crdt.sequence import Sequence
+from wrapt import synchronized
 
 from src.glyphs import Glyph
 from src.position_generator import Position
-from wrapt import synchronized
 
 
 class CRDT:
     def __init__(self, site_id: UUID):
-        self._sorted_dict = SortedDict()
-        self._site_id = site_id
-        self._deleted_positions = set()
+        self._seq = Sequence(site_id)
 
     @property
-    def site_id(self) -> UUID:
-        return self._site_id
+    def site_id(self) -> int:
+        return self._seq.id
 
     @synchronized
     def get_elements(self) -> List[Glyph]:
-        return list(self._sorted_dict.values())
+        return self._seq.elem_seq
 
     @synchronized
     def get_positions(self) -> List[Position]:
-        return list(self._sorted_dict.keys())
+        return self._seq.id_seq
 
     @synchronized
     def insert(self, element: Glyph, position: Position):
-        if position in self._sorted_dict.keys():
-            raise KeyError(f'Position already exists {position}')
-        self._sorted_dict[position] = element
+        if self._seq.query(position):
+            raise ValueError(f'Position already exists: {position}')
+        self._seq.add(element, position)
 
     @synchronized
     def insert_many(self, elements: List[Glyph],
@@ -41,32 +39,20 @@ class CRDT:
 
     @synchronized
     def remove(self, position: Position):
-        self._deleted_positions.add(position)
-        del self._sorted_dict[position]
+        if not self._seq.query(position):
+            raise ValueError(f'Position does not exist: {position}')
+        self._seq.remove(position)
 
     @synchronized
-    def merge(self, pickled_crdt: bytes):
-        sorted_dict, deleted_positions = pickle.loads(pickled_crdt)
-        print(f'Merging {sorted_dict} and {deleted_positions}')
-        self._delete_positions_suppressing_key_errors(deleted_positions)
-        self._insert_positions_from(sorted_dict)
+    def merge(self, other: bytes):
+        seq = pickle.loads(other)
+        self._seq.merge(seq)
 
-    def _insert_positions_from(self, sorted_dict: SortedDict):
-        for position, glyph in sorted_dict.items():
-            self._sorted_dict[position] = glyph
-
-    def _delete_positions_suppressing_key_errors(
-            self, positions_to_delete: Set[Position]):
-        for position in positions_to_delete:
-            try:
-                del self._sorted_dict[position]
-            except KeyError:
-                pass
+    def __repr__(self):
+        return f'CRDT({self._seq})'
 
     @synchronized
     def pickle(self):
-        return pickle.dumps((self._sorted_dict, self._deleted_positions))
+        return pickle.dumps(self._seq)
 
-    @synchronized
-    def __repr__(self):
-        return f'CRDT({self._sorted_dict.values()})'
+

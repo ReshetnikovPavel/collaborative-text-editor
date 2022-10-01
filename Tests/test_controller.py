@@ -24,6 +24,7 @@ class Base(unittest.TestCase):
         self.initializer.initialise()
         self.controller = self.initializer.controller
         self.controller.view = ViewPlaceholder()
+        self.wait_time = 0.1
 
     def tearDown(self):
         self.controller.node.stop()
@@ -83,7 +84,7 @@ class TestController(Base):
 
         self.controller.connect_to(host, port)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         actual = self.controller.view.to_string()
         self.assertEqual(actual, 'Hello world')
@@ -101,14 +102,14 @@ class TestController(Base):
 
         self.controller.connect_to(host, port)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         string_to_add = 'a'
         self.controller.model.get_document().insert(
             src.glyphs.Character(string_to_add), 0)
         self.controller.send_crdt(self.controller.model.get_document()._crdt)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         actual = src.glyphs.to_string(controller2.view.document._glyphs)
         expected_possible_1 = string_to_add + string2
@@ -146,14 +147,14 @@ class TestController(Base):
         host = controller2.node.host
         port = controller2.node.port
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
         self.controller.connect_to(host, port)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         self.controller.insert(src.glyphs.Character('a'), 1)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         actual = src.glyphs.to_string(controller2.view.document._glyphs)
         expected = 'Haello World'
@@ -165,14 +166,14 @@ class TestController(Base):
         host = controller2.node.host
         port = controller2.node.port
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
         self.controller.connect_to(host, port)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         self.controller.remove(1)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         actual = src.glyphs.to_string(controller2.view.document._glyphs)
         expected = 'Hllo World'
@@ -186,12 +187,43 @@ class TestController(Base):
         host = controller2.node.host
         port = controller2.node.port
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
         self.controller.connect_to(host, port)
 
-        time.sleep(2)
+        time.sleep(self.wait_time)
 
         actual = src.glyphs.to_string(self.controller.view.document._glyphs)
         expected = 'Hello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
+
+    def test_crdts_are_the_same_after_multiple_iterations(self):
+        controller2 = self.prepare_another_controller('Hello World')
+        host = controller2.node.host
+        port = controller2.node.port
+
+        time.sleep(self.wait_time)
+        self.controller.connect_to(host, port)
+
+        time.sleep(self.wait_time)
+
+        self.controller.insert(src.glyphs.Character('a'), 1)
+        time.sleep(self.wait_time)
+        controller2.insert(src.glyphs.Character('b'), 2)
+        time.sleep(self.wait_time)
+        self.controller.insert(src.glyphs.Character('c'), 3)
+        self.controller.remove(1)
+        self.controller.remove(1)
+        time.sleep(self.wait_time)
+        controller2.remove(1)
+
+        time.sleep(3)
+
+        print('controller1', self.controller.view.document.glyphs)
+        print('controller2', controller2.view.document.glyphs)
+
+        actual = src.glyphs.to_string(self.controller.view.document._glyphs)
+        expected = 'Hello World'
+        self.assertEqual(actual, expected)
+        controller2.node.stop()
+        time.sleep(4)

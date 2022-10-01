@@ -88,26 +88,12 @@ class TestCRDT(Base):
         position = Position([Identifier(0, 0)])
         crdt.insert(char, position)
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(ValueError):
             crdt.insert(char, position)
 
     def test_remove_do_not_exist(self):
         crdt = CRDT(0)
         position = Position([Identifier(0, 0)])
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(ValueError):
             crdt.remove(position)
-
-    def test_delete_positions_suppressing_key_errors(self):
-        crdt = CRDT(0)
-        char = Character('a')
-        position = Position([Identifier(0, 0)])
-        char2 = Character('b')
-        position2 = Position([Identifier(0, 0), Identifier(0, 1)])
-        crdt.insert(char, position)
-        crdt.insert(char2, position2)
-
-        crdt._delete_positions_suppressing_key_errors(
-            {position2, Position([Identifier(0, 1)])})
-
-        self.assertEqual(crdt.get_elements(), [char])

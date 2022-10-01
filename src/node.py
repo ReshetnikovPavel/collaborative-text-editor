@@ -32,9 +32,3 @@ class Node(node.Node):
             self.message_size = data
         elif isinstance(data, bytes):
             self.controller.update_crdt(data)
-
-
-
-
-
-
