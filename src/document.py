@@ -21,7 +21,7 @@ class Document:
         self._crdt.insert_many(self._glyphs, positions)
 
     @property
-    def site_id(self) -> int:
+    def site_id(self) -> UUID:
         return self._crdt.site_id
 
     def insert(self, element: glyphs.Glyph, index: int):

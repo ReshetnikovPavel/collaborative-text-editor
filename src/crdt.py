@@ -56,7 +56,7 @@ class CRDT:
             self._sorted_dict[position] = glyph
 
     def _delete_positions_suppressing_key_errors(
-            self, positions_to_delete: Set[Glyph]):
+            self, positions_to_delete: Set[Position]):
         for position in positions_to_delete:
             try:
                 del self._sorted_dict[position]
