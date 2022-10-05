@@ -1,4 +1,4 @@
-from src.glyphs import to_list_of_lists
+from src.utils import to_string_list
 
 
 class View:
@@ -9,8 +9,8 @@ class View:
     def initialise(self, controller: 'Controller', editor: 'Editor'):
         self.controller = controller
         self.editor = editor
-        self.update(self.controller.model.get_document())
+        # self.update(self.controller.model.get_document())
 
     def update(self, document: 'Document'):
-        self.editor.buffer.list = to_list_of_lists(document.glyphs)
+        self.editor.buffer.lines = to_string_list(document.glyphs)
 

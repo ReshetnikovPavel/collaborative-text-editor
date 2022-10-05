@@ -1,12 +1,8 @@
-from typing import List
-from src.glyphs import Character, Glyph, to_list_of_lists
-
-
 class Buffer:
-    def __init__(self, glyph_list: List[Glyph]):
-        self.lines = to_list_of_lists(glyph_list)
+    def __init__(self, text: str = ""):
+        self.lines = text.split('\n')
 
-    def __getitem__(self, index: int) -> List[Glyph]:
+    def __getitem__(self, index: int) -> str:
         return self.lines[index]
 
     def __len__(self) -> int:
@@ -19,7 +15,7 @@ class Buffer:
     def insert(self, cursor_position: tuple[int, int], value: str) -> None:
         row, col = cursor_position
         current = self.lines.pop(row)
-        new_line = current[:col] + [Character(value)] + current[col:]
+        new_line = current[:col] + value + current[col:]
         self.lines.insert(row, new_line)
 
     def delete(self, cursor_position: tuple[int, int], count: int = 1) -> None:

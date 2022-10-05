@@ -6,7 +6,7 @@ from src.buffer import Buffer
 from src.cursor import Cursor
 from src.window import Window
 from src.formatter import highlight_code
-from src.utils import parse_args, to_glyph_list, to_one_dimensional_index
+from src.utils import parse_args, to_one_dimensional_index
 
 
 class Editor:
@@ -21,9 +21,7 @@ class Editor:
     def __draw_text(self) -> None:
         for row, line in enumerate(
                 self.buffer[self.__window.row: self.__window.row + self.__window.num_rows]):
-            # TODO : Взять to_string() из glyphs.py
-            self.__cansi.addstr(
-                row, 0, highlight_code("".join([glyph.draw() for glyph in line])))
+            self.__cansi.addstr(row, 0, highlight_code(line))
 
     def __draw_screen(self) -> None:
         self.__screen.clear()
@@ -55,12 +53,12 @@ class Editor:
             self.controller.remove(to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
             # self.buffer.delete(self.__cursor.position, count=1)
         elif key == curses.KEY_ENTER or key == 10:
-            self.controller.insert(to_one_dimensional_index(self.__cursor.position, self.buffer.lines), "\n")
+            self.controller.insert("\n", to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
             # self.buffer.split(self.__cursor.position)
         elif key == curses.KEY_RESIZE:
             self.__window = Window(curses.LINES - 1, curses.COLS - 1)
         else:
-            self.controller.insert(to_one_dimensional_index(self.__cursor.position, self.buffer.lines), chr(key))
+            self.controller.insert(chr(key), to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
             # self.buffer.insert(self.__cursor.position, chr(key))
 
 

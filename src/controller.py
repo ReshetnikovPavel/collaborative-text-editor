@@ -6,16 +6,7 @@ from uuid import UUID
 
 from src.crdt import CRDT
 from src.node import Node
-from src.glyphs import Glyph
 import pickle
-
-
-def get_free_port():
-    while True:
-        port = randint(32768, 61000)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        if not (sock.connect_ex(('127.0.0.1', port)) == 0):
-            return port
 
 
 class Controller:
@@ -28,7 +19,7 @@ class Controller:
     def initialise(self, model: 'Model', view: 'View'):
         self.model = model
         self.view = view
-        self.node = Node(self, 'localhost', get_free_port(), self.site_id)
+        self.node = Node(self, 'localhost', self.site_id, self.site_id)
         self.node.start()
 
     def update_crdt(self, pickled_crdt: bytes):
@@ -41,7 +32,7 @@ class Controller:
         self.node.send_to_nodes(str(len(pickled_crdt)))
         self.node.send_to_nodes(pickled_crdt, compression="zlib")
 
-    def create_document(self, glyphs: List[Glyph]):
+    def create_document(self, glyphs: List[chr]):
         document = self.model.create_document(glyphs)
         self.view.update(document)
 
@@ -52,7 +43,7 @@ class Controller:
     def on_someone_joined(self):
         self.send_crdt(self.model.get_document().crdt)
 
-    def insert(self, glyph: Glyph, index: int):
+    def insert(self, glyph: chr, index: int):
         with self.document_to_be_updated() as document:
             document.insert(glyph, index)
 

@@ -5,7 +5,6 @@ from uuid import UUID
 from py3crdt.sequence import Sequence
 from wrapt import synchronized
 
-from src.glyphs import Glyph
 from src.position_generator import Position
 
 
@@ -18,7 +17,7 @@ class CRDT:
         return self._seq.id
 
     @synchronized
-    def get_elements(self) -> List[Glyph]:
+    def get_elements(self) -> List[chr]:
         return self._seq.elem_seq
 
     @synchronized
@@ -26,13 +25,13 @@ class CRDT:
         return self._seq.id_seq
 
     @synchronized
-    def insert(self, element: Glyph, position: Position):
+    def insert(self, element: chr, position: Position):
         if self._seq.query(position):
             raise ValueError(f'Position already exists: {position}')
         self._seq.add(element, position)
 
     @synchronized
-    def insert_many(self, elements: List[Glyph],
+    def insert_many(self, elements: List[chr],
                     positions: Generator[Position, None, None]):
         for element, position in zip(elements, positions):
             self.insert(element, position)

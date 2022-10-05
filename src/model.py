@@ -2,7 +2,6 @@ from typing import List
 from uuid import UUID
 
 from src.crdt import CRDT
-from src.glyphs import Glyph
 from src.document import Document
 
 
@@ -16,7 +15,7 @@ class Model:
     def initialise(self, controller: 'Controller'):
         self.controller = controller
 
-    def create_document(self, glyphs: List[Glyph]) -> Document:
+    def create_document(self, glyphs: List[chr]) -> Document:
         document = Document(glyphs, self.site_id)
         self.documents.append(document)
         self.current_document = document

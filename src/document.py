@@ -1,14 +1,13 @@
 from typing import List
 from uuid import UUID
 
-import src.glyphs as glyphs
 import src.position_generator as position_generator
 from src.crdt import CRDT
 from src.position_generator import Position
 
 
 class Document:
-    def __init__(self, glyphs: List[glyphs.Glyph], site_id: UUID):
+    def __init__(self, glyphs: List[chr], site_id: UUID):
         self._crdt = CRDT(site_id)
         self._glyphs = glyphs
         self._converter = IndexPositionConverter(self._crdt, self.site_id)
@@ -24,7 +23,7 @@ class Document:
     def site_id(self) -> UUID:
         return self._crdt.site_id
 
-    def insert(self, element: glyphs.Glyph, index: int):
+    def insert(self, element: chr, index: int):
         position = self._converter.generate_new_position(index)
         self._crdt.insert(element, position)
         self._update_glyphs_local()
@@ -38,7 +37,7 @@ class Document:
         self._glyphs = self._crdt.get_elements()
 
     @property
-    def glyphs(self) -> List[glyphs.Glyph]:
+    def glyphs(self) -> List[chr]:
         return self._glyphs
 
     @property
