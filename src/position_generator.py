@@ -204,9 +204,9 @@ class Decimal:
             if index == len(self.digits) - 1:
                 ids.append(Identifier(digit, creation_site))
             elif index < len(before.ids) and digit == before.ids[index].digit:
-                ids.append(Identifier(digit, before.ids[index].site))
+                ids.append(before.ids[index])
             elif index < len(after.ids) and digit == after.ids[index].digit:
-                ids.append(Identifier(digit, after.ids[index].site))
+                ids.append(after.ids[index])
             else:
                 ids.append(Identifier(digit, creation_site))
         return Position(ids)

@@ -1,11 +1,9 @@
-import pickle
 import time
 import unittest
 
-from src.crdt import CRDT
-from src.initializer import Initializer
-from src.document import Document
 import src.initializer
+from src.document import Document
+from src.initializer import Initializer
 
 
 class ViewPlaceholder:
@@ -13,14 +11,11 @@ class ViewPlaceholder:
     def update(self, document: Document):
         self.document = document
 
-    def to_string(self):
-        return src.glyphs.to_string(self.document.glyphs)
-
 
 class Base(unittest.TestCase):
     def setUp(self):
         self.initializer = Initializer()
-        self.initializer.initialise()
+        self.initializer.initialise('', None)
         self.controller = self.initializer.controller
         self.controller.view = ViewPlaceholder()
         self.wait_time = 0.1
@@ -32,17 +27,17 @@ class Base(unittest.TestCase):
 class TestController(Base):
     def test_create_document(self):
         string = 'The quick brown fox jumps over the lazy dog'
-        glyphs = list(src.glyphs.get_from(string))
+        glyphs = string
 
         self.controller.create_document(glyphs)
 
-        actual = src.glyphs.to_string(self.controller.view.document._glyphs)
+        actual = ''.join(self.controller.view.document._glyphs)
         expected = string
         self.assertEqual(actual, expected)
 
     def test_update_crdt(self):
         string = 'The quick brown fox jumps over the lazy dog'
-        glyphs = list(src.glyphs.get_from(string))
+        glyphs = string
         self.controller.create_document(glyphs)
 
         string2 = 'Hello World'
@@ -50,16 +45,16 @@ class TestController(Base):
         pickled_crdt2 = crdt2.pickle()
 
         self.controller.update_crdt(pickled_crdt2)
-        actual = src.glyphs.to_string(self.controller.view.document._glyphs)
+        actual = ''.join(self.controller.view.document._glyphs)
 
         self.assertTrue(string in actual, actual)
         self.assertTrue(string2 in actual, actual)
 
     @staticmethod
     def _create_another_crdt(string):
-        glyphs2 = list(src.glyphs.get_from(string))
+        glyphs2 = list(string)
         initializer2 = Initializer()
-        initializer2.initialise()
+        initializer2.initialise(string, None)
         controller2 = initializer2.controller
         controller2.view = ViewPlaceholder()
         controller2.create_document(glyphs2)
@@ -91,7 +86,7 @@ class TestController(Base):
 
     def test_send_crdt(self):
         string = ''
-        glyphs = list(src.glyphs.get_from(string))
+        glyphs = list(string)
         self.controller.create_document(glyphs)
 
         string2 = 'Hello World'
@@ -104,13 +99,12 @@ class TestController(Base):
         time.sleep(self.wait_time)
 
         string_to_add = 'a'
-        self.controller.model.get_document().insert(
-            src.glyphs.Character(string_to_add), 0)
+        self.controller.model.get_document().insert(string_to_add, 0)
         self.controller.send_crdt(self.controller.model.get_document()._crdt)
 
         time.sleep(self.wait_time)
 
-        actual = src.glyphs.to_string(controller2.view.document._glyphs)
+        actual = ''.join(controller2.view.document._glyphs)
         expected_possible_1 = string_to_add + string2
         expected_possible_2 = string2 + string_to_add
         self.assertTrue(expected_possible_1 == actual
@@ -121,7 +115,7 @@ class TestController(Base):
 
     @staticmethod
     def prepare_another_controller(string):
-        glyphs2 = list(src.glyphs.get_from(string))
+        glyphs2 = list(string)
         initializer2 = Initializer()
         initializer2.initialise()
         controller2 = initializer2.controller
@@ -132,12 +126,12 @@ class TestController(Base):
 
     def test_insert(self):
         string = 'Hello World'
-        glyphs = list(src.glyphs.get_from(string))
+        glyphs = list(string)
         self.controller.create_document(glyphs)
 
-        self.controller.insert(src.glyphs.Character('a'), 1)
+        self.controller.insert('a', 1)
 
-        actual = src.glyphs.to_string(self.controller.view.document._glyphs)
+        actual = ''.join(self.controller.view.document._glyphs)
         expected = 'Haello World'
         self.assertEqual(actual, expected)
 
@@ -151,11 +145,11 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        self.controller.insert(src.glyphs.Character('a'), 1)
+        self.controller.insert('a', 1)
 
         time.sleep(self.wait_time)
 
-        actual = src.glyphs.to_string(controller2.view.document._glyphs)
+        actual = ''.join(controller2.view.document._glyphs)
         expected = 'Haello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
@@ -174,14 +168,14 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = src.glyphs.to_string(controller2.view.document._glyphs)
+        actual = ''.join(controller2.view.document._glyphs)
         expected = 'Hllo World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
 
     def test_initial_text_is_gone_if_connected_to_another(self):
-        self.controller.insert(src.glyphs.Character('a'), 0)
-        self.controller.insert(src.glyphs.Character('b'), 1)
+        self.controller.insert('a', 0)
+        self.controller.insert('b', 1)
         controller2 = self.prepare_another_controller('Hello World')
         host = controller2.node.host
         port = controller2.node.port
@@ -191,7 +185,7 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = src.glyphs.to_string(self.controller.view.document._glyphs)
+        actual = ''.join(self.controller.view.document._glyphs)
         expected = 'Hello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
@@ -206,11 +200,11 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        self.controller.insert(src.glyphs.Character('a'), 1)
+        self.controller.insert('a', 1)
         time.sleep(self.wait_time)
-        controller2.insert(src.glyphs.Character('b'), 2)
+        controller2.insert('b', 2)
         time.sleep(self.wait_time)
-        self.controller.insert(src.glyphs.Character('c'), 3)
+        self.controller.insert('c', 3)
         self.controller.remove(1)
         self.controller.remove(1)
         time.sleep(self.wait_time)
@@ -221,20 +215,20 @@ class TestController(Base):
         print('controller1', self.controller.view.document.glyphs)
         print('controller2', controller2.view.document.glyphs)
 
-        actual = src.glyphs.to_string(self.controller.view.document._glyphs)
+        actual = ''.join(self.controller.view.document._glyphs)
         expected = 'Hello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
         time.sleep(4)
 
     def test_blame(self):
-        self.controller.insert(src.glyphs.Character('a'), 0)
+        self.controller.insert('a', 0)
         controller2 = self.prepare_another_controller('')
         host = controller2.node.host
         port = controller2.node.port
         self.controller.connect_to(host, port)
-        self.controller.insert(src.glyphs.Character('a'), 0)
-        controller2.insert(src.glyphs.Character('b'), 0)
+        self.controller.insert('a', 0)
+        controller2.insert('b', 0)
         time.sleep(self.wait_time)
 
         blame1by2 = controller2.blame(0)

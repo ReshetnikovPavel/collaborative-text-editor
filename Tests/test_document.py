@@ -1,11 +1,8 @@
 import unittest
 import uuid
 from typing import List
-
-import src.glyphs as glyphs
 from src.crdt import CRDT
 from src.document import Document
-from src.glyphs import Character
 from src.position_generator import Position, Identifier
 
 

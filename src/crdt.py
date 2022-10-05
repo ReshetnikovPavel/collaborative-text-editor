@@ -2,7 +2,7 @@ import pickle
 from typing import Generator, List
 from uuid import UUID
 
-from py3crdt.sequence import Sequence
+from src.sequence import Sequence
 from wrapt import synchronized
 
 from src.position_generator import Position

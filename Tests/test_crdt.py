@@ -29,7 +29,7 @@ class TestCRDT(Base):
 
     def test_elements(self):
         crdt = CRDT(0)
-        # char = chr('a')
+        char = 'a'
         crdt.insert('a', Position([Identifier(0, 0)]))
 
         self.assertEqual(crdt.get_elements(), [char])
@@ -66,7 +66,7 @@ class TestCRDT(Base):
     def test_merge(self):
         crdt1 = CRDT(0)
         crdt2 = CRDT(1)
-        # char = Character('a')
+        char = 'a'
         position1 = Position([Identifier(0, 0)])
         position2 = Position([Identifier(1, 0)])
         crdt1.insert('a', position1)
@@ -83,7 +83,7 @@ class TestCRDT(Base):
 
     def test_insert_already_exists(self):
         crdt = CRDT(0)
-        char = Character('a')
+        char = 'a'
         position = Position([Identifier(0, 0)])
         crdt.insert(char, position)
 
