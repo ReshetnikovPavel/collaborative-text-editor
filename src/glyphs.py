@@ -21,6 +21,9 @@ class Character(Glyph):
     def draw(self):
         return self.value
 
+    def __eq__(self, other):
+        return self.value == other.value
+
     def __repr__(self):
         return f"Character('{self.value}')"
 

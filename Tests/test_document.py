@@ -1,7 +1,9 @@
 import unittest
+import uuid
 from typing import List
 
-from src import glyphs
+import src.glyphs as glyphs
+from src.crdt import CRDT
 from src.document import Document
 from src.glyphs import Character
 from src.position_generator import Position, Identifier
@@ -22,9 +24,10 @@ class TestDocument(Base):
 
         self.assertEqual(glyphs.to_string(document._glyphs), string)
         self.assertEqual(document._crdt.site_id, 0)
-        self.assertTrue(len(document._crdt.positions) != 0)
+        self.assertTrue(len(document._crdt.get_positions()) != 0)
 
-    def assert_glyphs_equal_to_string(self, glyphs_list: List[glyphs.Glyph], string: str):
+    def assert_glyphs_equal_to_string(self, glyphs_list: List[glyphs.Glyph],
+                                      string: str):
         self.assertEqual(glyphs.to_string(glyphs_list), string)
 
     def test_insert(self):
@@ -174,3 +177,44 @@ class TestDocument(Base):
         document = Document(list(glyphs.get_from('abc')), 0)
         with self.assertRaises(IndexError):
             document.remove(3)
+
+    def test_update_crdt(self):
+        document = Document([], 1)
+        crdt = CRDT(0)
+        crdt.insert(Character('a'),
+                    Position([Identifier(0, 0), Identifier(1, 0)]))
+        crdt.insert(Character('b'),
+                    Position([Identifier(0, 0), Identifier(2, 0)]))
+        crdt.insert(Character('c'),
+                    Position([Identifier(0, 0), Identifier(3, 0)]))
+        document.insert(Character('a'), 0)
+        document.insert(Character('b'), 1)
+        pickled_crdt = crdt.pickle()
+        document.update_crdt(pickled_crdt)
+        self.assert_glyphs_equal_to_string(document._glyphs, 'abcab')
+
+    def test_uuid(self):
+        id = uuid.uuid4()
+        id2 = uuid.uuid4()
+        document = Document([], id)
+        document.insert(Character('a'), 0)
+        document.insert(Character('b'), 1)
+        document.insert(Character('c'), 2)
+
+        document2 = Document([], id2)
+        document2.insert(Character('x'), 0)
+        document2.insert(Character('y'), 1)
+        document2.insert(Character('z'), 2)
+
+        pickled_crdt2 = document2._crdt.pickle()
+        document.update_crdt(pickled_crdt2)
+
+        first_part = ''.join(map(lambda x: x.draw(), document._glyphs[:3]))
+        second_part = ''.join(map(lambda x: x.draw(), document._glyphs[3:]))
+
+        self.assertTrue('abc' in first_part and 'xyz' in second_part
+                        or 'abc' in second_part and 'xyz' in first_part,
+                        f'{first_part} {second_part}')
+
+
+
