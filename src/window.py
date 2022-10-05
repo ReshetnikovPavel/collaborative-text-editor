@@ -1,5 +1,5 @@
-from buffer import Buffer
-from cursor import Cursor
+from src.buffer import Buffer
+from src.cursor import Cursor
 
 
 class Window:

@@ -45,3 +45,15 @@ def get_from(string: str) -> Generator[Glyph, None, None]:
 
 def to_string(glyphs: List[Glyph]) -> str:
     return ''.join([glyph.draw() for glyph in glyphs])
+
+
+def to_list_of_lists(glyphs: List[Glyph]) -> List[List[Glyph]]:
+    lines = [[]]
+    i = 0
+    for glyph in glyphs:
+        if glyph.draw() != "\n":
+            lines[i].append(glyph)
+        else:
+            lines.append([])
+            i += 1
+    return lines

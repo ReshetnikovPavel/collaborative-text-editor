@@ -1,4 +1,4 @@
-from buffer import Buffer
+from src.buffer import Buffer
 
 
 class Cursor:

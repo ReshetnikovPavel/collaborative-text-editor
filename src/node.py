@@ -15,16 +15,17 @@ class Node(node.Node):
         self.message_size = 0
 
     def outbound_node_connected(self, node):
-        super().outbound_node_connected(node)
-        print(f"{self.id}: Node {node.id} connected")
+        pass
+        # super().outbound_node_connected(node)
+        # print(f"{self.id}: Node {node.id} connected")
 
     def inbound_node_connected(self, node):
-        super().inbound_node_connected(node)
-        print(f"{self.id}: Node {node.id} connected")
+    #     super().inbound_node_connected(node)
+        # print(f"{self.id}: Node {node.id} connected")
         self.controller.on_someone_joined()
 
     def node_message(self, node, data):
-        print(f"{self.id}: Node {node.id} sent: {data}")
+        # print(f"{self.id}: Node {node.id} sent: {data}")
         self.process_data(data)
 
     def process_data(self, data):

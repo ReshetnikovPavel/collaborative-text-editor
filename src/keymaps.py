@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from cursor import Cursor
-from window import Window
-from buffer import Buffer
+from src.cursor import Cursor
+from src.window import Window
+from src.buffer import Buffer
 
 
 class Command(ABC):
