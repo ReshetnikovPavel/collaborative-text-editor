@@ -43,4 +43,4 @@ class Cursor:
             self.__col = 0
 
     def __push_cursor_to_end_of_line(self, buffer: Buffer) -> None:
-        self.__col = min(self.__col, len(buffer[self.__row])) + 5
+        self.__col = min(self.__col, len(buffer[self.__row]))
