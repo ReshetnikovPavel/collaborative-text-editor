@@ -15,12 +15,12 @@ class Node(node.Node):
         self.message_size = 0
 
     def outbound_node_connected(self, node):
-        pass
-        # super().outbound_node_connected(node)
+        super().outbound_node_connected(node)
         # print(f"{self.id}: Node {node.id} connected")
+        self.controller.on_someone_joined()
 
     def inbound_node_connected(self, node):
-    #     super().inbound_node_connected(node)
+        super().inbound_node_connected(node)
         # print(f"{self.id}: Node {node.id} connected")
         self.controller.on_someone_joined()
 
@@ -35,4 +35,5 @@ class Node(node.Node):
             self.controller.update_crdt(data)
 
     def debug_print(self, message):
-        pass
+        with open("debug.txt", "a") as f:
+            f.write(message + "\n")

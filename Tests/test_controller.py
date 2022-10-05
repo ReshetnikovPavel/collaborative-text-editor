@@ -5,7 +5,6 @@ import unittest
 from src.crdt import CRDT
 from src.initializer import Initializer
 from src.document import Document
-import src.glyphs
 import src.initializer
 
 

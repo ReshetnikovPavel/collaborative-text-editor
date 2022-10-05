@@ -12,11 +12,12 @@ from src.utils import parse_args, to_one_dimensional_index
 class Editor:
     def __init__(self, stdscr, glyph_list: list, controller) -> None:
         self.controller = controller
-        self.__screen = stdscr
-        self.__cansi = Cansi(self.__screen)
+        self.screen = stdscr
+        self.screen.timeout(500)
+        self.__cansi = Cansi(self.screen)
         self.buffer = Buffer(glyph_list)
         self.__cursor = Cursor()
-        self.__window = Window(curses.LINES, curses.COLS - 1)
+        self.__window = Window(curses.LINES - 1, curses.COLS - 1)
 
     def __draw_text(self) -> None:
         for row, line in enumerate(
@@ -24,11 +25,13 @@ class Editor:
             self.__cansi.addstr(row, 0, highlight_code(line))
 
     def __draw_screen(self) -> None:
-        self.__screen.clear()
+        self.screen.clear()
         self.__draw_text()
-        self.__screen.move(
+        self.__cansi.addstr(curses.LINES-2, 0, f"Host and Port: {self.controller.get_host_port()}")
+        self.screen.move(
             *self.__window.get_translated_cursor_coordinates(self.__cursor))
-        self.__screen.refresh()
+        self.screen.refresh()
+        # self.screen.nodelay(False)
 
     def __handle_keypress(self, key: int) -> None:
         if key == curses.KEY_UP:
@@ -58,14 +61,18 @@ class Editor:
         elif key == curses.KEY_RESIZE:
             self.__window = Window(curses.LINES - 1, curses.COLS - 1)
         else:
-            self.controller.insert(chr(key), to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
+            try:
+                self.controller.insert(chr(key), to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
+            except:
+                pass
+            # self.screen.touchwin()
             # self.buffer.insert(self.__cursor.position, chr(key))
 
 
     def run(self) -> None:
         self.__draw_screen()
         while True:
-            key = self.__screen.getch()
+            key = self.screen.getch()
             self.__handle_keypress(key)
             self.__draw_screen()
 

@@ -1,7 +1,6 @@
 import unittest
 from src.crdt import CRDT
 from src.position_generator import Position, Identifier
-from src.glyphs import Character
 
 
 class Base(unittest.TestCase):
@@ -30,34 +29,34 @@ class TestCRDT(Base):
 
     def test_elements(self):
         crdt = CRDT(0)
-        char = Character('a')
-        crdt.insert(char, Position([Identifier(0, 0)]))
+        # char = chr('a')
+        crdt.insert('a', Position([Identifier(0, 0)]))
 
         self.assertEqual(crdt.get_elements(), [char])
 
     def test_positions(self):
         crdt = CRDT(0)
-        char = Character('a')
+        # char = Character('a')
         position = Position([Identifier(0, 0)])
-        crdt.insert(char, position)
+        crdt.insert('a', position)
 
         self.assertEqual(crdt.get_positions(), [position])
 
     def test_insert(self):
         crdt = CRDT(0)
-        char = Character('a')
+        # char = Character('a')
         position = Position([Identifier(0, 0)])
 
-        crdt.insert(char, position)
+        crdt.insert('a', position)
 
-        self.assertEqual(crdt.get_elements(), [char])
+        self.assertEqual(crdt.get_elements(), ['a'])
         self.assertEqual(crdt.get_positions(), [position])
 
     def test_remove(self):
         crdt = CRDT(0)
-        char = Character('a')
+        # char = Character('a')
         position = Position([Identifier(0, 0)])
-        crdt.insert(char, position)
+        crdt.insert('a', position)
 
         crdt.remove(position)
 
@@ -67,16 +66,16 @@ class TestCRDT(Base):
     def test_merge(self):
         crdt1 = CRDT(0)
         crdt2 = CRDT(1)
-        char = Character('a')
+        # char = Character('a')
         position1 = Position([Identifier(0, 0)])
         position2 = Position([Identifier(1, 0)])
-        crdt1.insert(char, position1)
-        crdt2.insert(char, position2)
+        crdt1.insert('a', position1)
+        crdt2.insert('a', position2)
 
         pickled_crdt2 = crdt2.pickle()
         crdt1.merge(pickled_crdt2)
 
-        self.assertEqual(crdt1.get_elements(), [char, char])
+        self.assertEqual(crdt1.get_elements(), ['a', 'a'])
         self.assertEqual(crdt1.get_positions(), [position1, position2])
 
         self.assertEqual(crdt2.get_elements(), [char])

@@ -19,7 +19,7 @@ class Controller:
     def initialise(self, model: 'Model', view: 'View'):
         self.model = model
         self.view = view
-        self.node = Node(self, 'localhost', self.site_id, self.site_id)
+        self.node = Node(self, '127.0.0.1', self.site_id, self.site_id)
         self.node.start()
 
     def update_crdt(self, pickled_crdt: bytes):

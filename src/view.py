@@ -12,5 +12,6 @@ class View:
         # self.update(self.controller.model.get_document())
 
     def update(self, document: 'Document'):
+        # self.editor.screen.nodelay(True)
         self.editor.buffer.lines = to_string_list(document.glyphs)
 

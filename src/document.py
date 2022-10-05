@@ -4,8 +4,10 @@ from uuid import UUID
 import src.position_generator as position_generator
 from src.crdt import CRDT
 from src.position_generator import Position
+from wrapt import synchronized
 
 
+@synchronized
 class Document:
     def __init__(self, glyphs: List[chr], site_id: UUID):
         self._crdt = CRDT(site_id)
