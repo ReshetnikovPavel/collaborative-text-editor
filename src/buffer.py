@@ -1,8 +1,13 @@
+from typing import List
+from glyphs import Character
+
+
 class Buffer:
     def __init__(self, text=""):
-        self.__lines = text.split("\n")
+        split_lines = text.split("\n")
+        self.__lines = [[Character(s) for s in line] for line in split_lines]
 
-    def __getitem__(self, index: int) -> str:
+    def __getitem__(self, index: int) -> List[Character]:
         return self.__lines[index]
 
     def __len__(self) -> int:
@@ -12,10 +17,10 @@ class Buffer:
     def bottom(self) -> int:
         return len(self) - 1
 
-    def insert(self, cursor_position: tuple[int, int], text: str) -> None:
+    def insert(self, cursor_position: tuple[int, int], value: str) -> None:
         row, col = cursor_position
         current = self.__lines.pop(row)
-        new_line = current[:col] + text + current[col:]
+        new_line = current[:col] + [Character(value)] + current[col:]
         self.__lines.insert(row, new_line)
 
     def delete(self, cursor_position: tuple[int, int], count: int = 1) -> None:
@@ -25,7 +30,7 @@ class Buffer:
         curr_line = self.__lines.pop(row)
         if col < len(self[row]):
             new_line = curr_line[:col] + curr_line[col + count:]
-            if new_line == "":
+            if not new_line:
                 return
             self.__lines.insert(row, new_line)
         else:

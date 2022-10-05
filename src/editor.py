@@ -21,7 +21,8 @@ class Editor:
         for row, line in enumerate(
                 self.__buffer[self.__window.row: self.__window.row + self.__window.num_rows]):
             # self.__cansi.addstr(row, 0, f"{row:3} | ")
-            self.__cansi.addstr(row, 0, highlight_code(line))
+            self.__cansi.addstr(
+                row, 0, highlight_code("".join([character.draw() for character in line])))
 
     def __draw_screen(self) -> None:
         self.__screen.clear()
