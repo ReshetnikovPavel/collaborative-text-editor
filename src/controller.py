@@ -60,6 +60,9 @@ class Controller:
         with self.document_to_be_updated() as document:
             document.remove(position)
 
+    def get_host_port(self):
+        return self.node.host, self.node.port
+
     @contextlib.contextmanager
     def document_to_be_updated(self):
         document = self.model.get_document()
