@@ -227,3 +227,30 @@ class TestController(Base):
         self.assertEqual(actual, expected)
         controller2.node.stop()
         time.sleep(4)
+
+    def test_blame(self):
+        self.controller.insert(src.glyphs.Character('a'), 0)
+        controller2 = self.prepare_another_controller('')
+        host = controller2.node.host
+        port = controller2.node.port
+        self.controller.connect_to(host, port)
+        self.controller.insert(src.glyphs.Character('a'), 0)
+        controller2.insert(src.glyphs.Character('b'), 0)
+        time.sleep(self.wait_time)
+
+        blame1by2 = controller2.blame(0)
+        blame1by1 = self.controller.blame(0)
+
+        self.assertTrue(
+            str(blame1by1) == str(blame1by2) == str(controller2.get_uuid()),
+            f'{blame1by1} {blame1by2} {controller2.get_uuid()}')
+
+        blame2by2 = controller2.blame(1)
+        blame2by1 = self.controller.blame(1)
+
+        self.assertTrue(
+            str(blame2by1) == str(blame2by2) == str(self.controller.get_uuid()),
+            f'{blame2by1} {blame2by2} {self.controller.get_uuid()}')
+
+
+

@@ -52,16 +52,27 @@ class Controller:
     def on_someone_joined(self):
         self.send_crdt(self.model.get_document().crdt)
 
-    def insert(self, glyph: Glyph, position: int):
+    def insert(self, glyph: Glyph, index: int):
         with self.document_to_be_updated() as document:
-            document.insert(glyph, position)
+            document.insert(glyph, index)
 
-    def remove(self, position: int):
+    def remove(self, index: int):
         with self.document_to_be_updated() as document:
-            document.remove(position)
+            document.remove(index)
 
     def get_host_port(self):
         return self.node.host, self.node.port
+
+    def get_uuid(self):
+        return self.node.id
+
+    def blame(self, index: int):
+        document = self.model.get_document()
+        positions = document.crdt.get_positions()
+        position = positions[index]
+        latest_person_edited = position.ids[-1].site
+        return latest_person_edited
+
 
     @contextlib.contextmanager
     def document_to_be_updated(self):
