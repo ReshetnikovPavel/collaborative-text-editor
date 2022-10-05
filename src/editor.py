@@ -27,7 +27,7 @@ class Editor:
         self.__screen.clear()
         self.__draw_text()
         self.__screen.move(
-            *self.__window.get_translated_cursor_coordinates(self.__cursor, 5))
+            *self.__window.get_translated_cursor_coordinates(self.__cursor))
         self.__screen.refresh()
 
     def __handle_keypress(self, key: int) -> None:
