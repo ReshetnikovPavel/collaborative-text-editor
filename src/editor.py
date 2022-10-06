@@ -27,7 +27,7 @@ class Editor:
     def __draw_screen(self) -> None:
         self.screen.clear()
         self.__draw_text()
-        self.__cansi.addstr(curses.LINES-2, 0, f"Host and Port: {self.controller.get_host_port()}")
+        self.__cansi.addstr(curses.LINES-1, 0, f"Host and Port: {self.controller.get_host_port()}")
         self.screen.move(
             *self.__window.get_translated_cursor_coordinates(self.__cursor))
         self.screen.refresh()
@@ -50,20 +50,38 @@ class Editor:
             self.__cursor.right(self.buffer)
             self.__window.down(self.buffer, self.__cursor)
             self.__window.horizontal_scroll(self.__cursor)
-        # elif key == curses.KEY_BACKSPACE:
-        #     self.buffer.delete(self.__cursor.position)
+        elif key == curses.KEY_BACKSPACE:
+            self.__cursor.left(self.buffer)
+            try:
+                self.controller.remove(
+                    to_one_dimensional_index(
+                        self.__cursor.position, self.buffer.lines))
+            except Exception as e:
+                pass
         elif key == curses.KEY_DC:
-            self.controller.remove(to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
-            # self.buffer.delete(self.__cursor.position, count=1)
+            try:
+                self.controller.remove(
+                    to_one_dimensional_index(
+                        self.__cursor.position, self.buffer.lines))
+            except Exception as e:
+                pass
         elif key == curses.KEY_ENTER or key == 10:
-            self.controller.insert("\n", to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
+            try:
+                self.controller.insert("\n", to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
+                self.__cursor.push_cursor_to_start_of_line(self.buffer)
+            except Exception as e:
+                pass
+
             # self.buffer.split(self.__cursor.position)
         elif key == curses.KEY_RESIZE:
             self.__window = Window(curses.LINES - 1, curses.COLS - 1)
         else:
             try:
                 self.controller.insert(chr(key), to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
-            except:
+                self.__cursor.right(self.buffer)
+                self.__window.down(self.buffer, self.__cursor)
+                self.__window.horizontal_scroll(self.__cursor)
+            except Exception as e:
                 pass
             # self.screen.touchwin()
             # self.buffer.insert(self.__cursor.position, chr(key))
