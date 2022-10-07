@@ -21,38 +21,38 @@ class TestBuffer(unittest.TestCase):
         self.assertEqual(self.buffer.bottom, len(self.split_text) - 1)
 
     def test_insert_in_the_beginning(self) -> None:
-        self.buffer.insert(Cursor(0, 0), "0 line")
+        self.buffer.insert((0, 0), "0 line")
         self.assertEqual(self.buffer[0], "0 line")
 
     def test_insert_in_the_middle(self) -> None:
-        self.buffer.insert(Cursor(2, 2), "inserted ")
+        self.buffer.insert((2, 2), "inserted ")
         self.assertEqual(self.buffer[2], "2 inserted line")
 
     def test_insert_in_the_end(self) -> None:
-        self.buffer.insert(Cursor(5, 6), " inserted")
+        self.buffer.insert((5, 6), " inserted")
         self.assertEqual(self.buffer[5], "5 line inserted")
 
     def test_delete_empty_line(self) -> None:
-        self.buffer.delete(Cursor(0, 0))
+        self.buffer.delete((0, 0))
         self.assertListEqual(self.buffer[:], self.split_text[1:])
 
     def test_delete_one_symbol(self) -> None:
-        self.buffer.delete(Cursor(2, 1))
+        self.buffer.delete((2, 1))
         self.assertEqual(self.buffer[2], "2line")
 
     def test_delete_two_symbols(self) -> None:
-        self.buffer.delete(Cursor(2, 1), 2)
+        self.buffer.delete((2, 1), 2)
         self.assertEqual(self.buffer[2], "2ine")
 
     def test_delete_in_the_end(self) -> None:
-        self.buffer.delete(Cursor(2, 6))
+        self.buffer.delete((2, 6))
         expected_line = "2 line3 line"
         expected_list = self.split_text[:2] + [expected_line] + self.split_text[4:]
         self.assertEqual(self.buffer[2], expected_line)
         self.assertListEqual(self.buffer[:], expected_list)
 
     def test_split(self) -> None:
-        self.buffer.split(Cursor(2, 2))
+        self.buffer.split((2, 2))
         expected_list = self.split_text[:2] + ["2 ", "line"] + self.split_text[3:]
         self.assertListEqual(self.buffer[:], expected_list)
 

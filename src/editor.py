@@ -1,5 +1,5 @@
 import curses
-
+import pyperclip
 from cansi import Cansi
 
 from src.buffer import Buffer
@@ -11,6 +11,7 @@ from src.utils import parse_args, to_one_dimensional_index
 
 class Editor:
     def __init__(self, stdscr, glyph_list: list, controller) -> None:
+        self.select_mode = False
         self.controller = controller
         self.screen = stdscr
         self.screen.timeout(500)
@@ -75,6 +76,33 @@ class Editor:
             # self.buffer.split(self.__cursor.position)
         elif key == curses.KEY_RESIZE:
             self.__window = Window(curses.LINES - 1, curses.COLS - 1)
+        elif key == curses.KEY_F1:
+            self.select_mode = not self.select_mode
+            first_iter = True
+            while self.select_mode:
+                if first_iter:
+                    first_iter = False
+                    self.start_pos = self.__cursor.position
+                key = self.screen.getch()
+                self.__handle_keypress(key)
+                self.screen.chgat(*self.__cursor.position, 1, curses.A_REVERSE)
+
+        elif self.select_mode and key == ord('c'):
+            self.select_mode = False
+            start = to_one_dimensional_index(self.start_pos, self.buffer.lines)
+            curr_pos = to_one_dimensional_index(self.__cursor.position, self.buffer.lines)
+            pyperclip.copy("".join(self.controller.model.get_document().glyphs[start:curr_pos]))
+        # elif self.select_mode and key == ord('v'):
+        #     self.select_mode = False
+        #     # start = to_one_dimensional_index(self.start_pos, self.buffer.lines)
+        #     text = pyperclip.paste()
+        #     # curr_pos = to_one_dimensional_index(self.__cursor.position, self.buffer.lines)
+        #     for char in text:
+        #         try:
+        #             self.controller.insert(str(char), to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
+        #         except:
+        #             pass
+        #         self.__cursor.right(self.buffer)
         else:
             try:
                 self.controller.insert(chr(key), to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
