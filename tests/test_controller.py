@@ -1,9 +1,10 @@
 import time
 import unittest
 
-import src.initializer
+from src.controller import Controller
 from src.document import Document
-from src.initializer import Initializer
+from src.initializer import get_free_port
+from src.model import Model
 
 
 class ViewPlaceholder:
@@ -14,11 +15,18 @@ class ViewPlaceholder:
 
 class Base(unittest.TestCase):
     def setUp(self):
-        self.initializer = Initializer()
-        self.initializer.initialise('', None)
-        self.controller = self.initializer.controller
-        self.controller.view = ViewPlaceholder()
+        self.model, self.view, self.controller, self.site_id = self.set_up_mvc()
         self.wait_time = 0.1
+    
+    def set_up_mvc(self):
+        site_id = get_free_port()
+        model = Model(site_id)
+        view = ViewPlaceholder()
+        controller = Controller(site_id)
+        controller.initialise(model, view)
+        model.initialise(controller)
+
+        return model, view, controller, site_id
 
     def tearDown(self):
         self.controller.node.stop()
@@ -50,17 +58,13 @@ class TestController(Base):
         self.assertTrue(string in actual, actual)
         self.assertTrue(string2 in actual, actual)
 
-    @staticmethod
-    def _create_another_crdt(string):
+    def _create_another_crdt(self, string):
         glyphs2 = list(string)
-        initializer2 = Initializer()
-        initializer2.initialise(string, None)
-        controller2 = initializer2.controller
-        controller2.view = ViewPlaceholder()
-        controller2.create_document(glyphs2)
-        crdt2 = controller2.view.document._crdt
-        controller2.node.stop()
-        return crdt2
+        model, view, controller, site_id = self.set_up_mvc()
+        controller.create_document(glyphs2)
+        crdt = controller.view.document._crdt
+        controller.node.stop()
+        return crdt
 
     def test_connect_to(self):
         controller2 = self.prepare_another_controller('')
@@ -80,7 +84,7 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = self.controller.view.to_string()
+        actual = ''.join(self.controller.view.document._glyphs)
         self.assertEqual(actual, 'Hello world')
         controller2.node.stop()
 
@@ -113,13 +117,9 @@ class TestController(Base):
                         f' {expected_possible_1} or {expected_possible_2}')
         controller2.node.stop()
 
-    @staticmethod
-    def prepare_another_controller(string):
+    def prepare_another_controller(self, string):
         glyphs2 = list(string)
-        initializer2 = Initializer()
-        initializer2.initialise()
-        controller2 = initializer2.controller
-        controller2.view = ViewPlaceholder()
+        model2, view2, controller2, site_id = self.set_up_mvc()
         controller2.create_document(glyphs2)
 
         return controller2
@@ -228,6 +228,7 @@ class TestController(Base):
         port = controller2.node.port
         self.controller.connect_to(host, port)
         self.controller.insert('a', 0)
+        time.sleep(self.wait_time)
         controller2.insert('b', 0)
         time.sleep(self.wait_time)
 
@@ -245,5 +246,5 @@ class TestController(Base):
             str(blame2by1) == str(blame2by2) == str(self.controller.get_uuid()),
             f'{blame2by1} {blame2by2} {self.controller.get_uuid()}')
 
-
+        controller2.node.stop()
 
