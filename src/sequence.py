@@ -1,115 +1,59 @@
-from sortedcontainers import SortedList
+from sortedcontainers import SortedSet
 
-
-class SeqFunctions:
-
-    @staticmethod
-    def add(payload, elem, id):
-        payload.add((elem, id))
-
-        return payload
-
-    @staticmethod
-    def remove(payload, id):
-        payload.add(id)
-
-        return payload
-
-    @staticmethod
-    def merge(payload1, payload2):
-
-        for item in payload2:
-            if item not in payload1:
-                payload1.add(item)
-
-        return payload1
-
-    @staticmethod
-    def display(name, payload):
-
-        print("{}: ".format(name), payload)
-
-    @staticmethod
-    def get_seq(payload):
-
-        seq = ""
-        for elem in payload:
-            seq += elem
-        return seq
+from src.position_generator import Position
 
 
 class Sequence:
 
-    def __init__(self, id):
-        self.elem_list = SortedList()
-        self.id_remv_list = SortedList()
-        self.id_seq = SortedList()
-        self.elem_seq = []
-        self.id = id
-        self.seqf = SeqFunctions()
+    def __init__(self, site_id: int):
+        self.elements_with_ids = SortedSet()
+        self.ids_to_remove = SortedSet()
+        self.ids = SortedSet()
+        self.elements = []
+        self.site_id = site_id
 
-    def update_seq(self):
-        for item in self.elem_list:
-            if item[1] not in self.id_remv_list and item[1] not in self.id_seq:
-                self.id_seq.add(item[1])
-        for id in self.id_remv_list:
-            if id in self.id_seq:
-                del self.elem_seq[self.id_seq.index(id)]
-                self.id_seq.remove(id)
+    def to_string(self):
+        return ''.join(self.elements)
 
-        for id in self.id_seq:
-            for item in self.elem_list:
+    def add(self, element: chr, id: Position):
+        self.elements_with_ids.add((element, id))
+        self.update_sequence()
+
+    def remove(self, id: Position):
+        self.ids_to_remove.add(id)
+        self.update_sequence()
+
+    def contains_id(self, id_to_check: Position) -> bool:
+        return id_to_check in map(lambda pair: pair[1], self.elements_with_ids) \
+               and id_to_check not in self.ids_to_remove
+
+    def merge(self, other: 'Sequence'):
+        self.elements_with_ids = self.elements_with_ids.union(other.elements_with_ids)
+        self.ids_to_remove = self.ids_to_remove.union(other.ids_to_remove)
+        self.update_sequence()
+
+    def update_sequence(self):
+        self._add_ids()
+        self._remove_ids_and_elements()
+        self._add_new_elements()
+
+    def _add_ids(self):
+        for element, id in self.elements_with_ids:
+            if id not in self.ids_to_remove and id not in self.ids:
+                self.ids.add(id)
+
+    def _remove_ids_and_elements(self):
+        for id in self.ids_to_remove:
+            if id in self.ids:
+                del self.elements[self.ids.index(id)]
+                self.ids.remove(id)
+
+    def _add_new_elements(self):
+        for id in self.ids:
+            for item in self.elements_with_ids:
                 if item[1] == id:
-                    if len(self.elem_seq) > self.id_seq.index(id):
-                        if item[0] != self.elem_seq[self.id_seq.index(id)]:
-                            self.elem_seq.insert(self.id_seq.index(id),
-                                                 item[0])
+                    if len(self.elements) > self.ids.index(id):
+                        if item[0] != self.elements[self.ids.index(id)]:
+                            self.elements.insert(self.ids.index(id), item[0])
                     else:
-                        self.elem_seq.append(item[0])
-
-    def add(self, elem, id):
-
-        self.elem_list = self.seqf.add(self.elem_list, elem, id)
-
-        # Call update_seq function
-        self.update_seq()
-
-    def remove(self, id):
-
-        self.id_remv_list = self.seqf.remove(self.id_remv_list, id)
-
-        # Call update_seq function
-        self.update_seq()
-
-    def query(self, id):
-
-        for item in self.elem_list:
-            if item[1] == id:
-                if id not in self.id_remv_list:
-                    return True
-                else:
-                    return False
-        return False
-
-    def merge(self, list, func='na'):
-
-        if func == 'na':
-            self.elem_list = self.seqf.merge(self.elem_list, list.elem_list)
-            self.id_remv_list = self.seqf.merge(self.id_remv_list,
-                                                list.id_remv_list)
-        elif func == 'elem':
-            self.elem_list = self.seqf.merge(self.elem_list, list)
-        elif func == 'id':
-            self.id_remv_list = self.seqf.merge(self.id_remv_list, list)
-        self.update_seq()
-
-    def display(self):
-
-        self.seqf.display("Elem List", self.elem_list)
-        self.seqf.display("ID Removed List", self.id_remv_list)
-        self.seqf.display("ID Seq", self.id_seq)
-        self.seqf.display("Elem Seq", self.elem_seq)
-
-    def get_seq(self):
-
-        return self.seqf.get_seq(self.elem_seq)
+                        self.elements.append(item[0])

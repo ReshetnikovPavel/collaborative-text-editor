@@ -1,5 +1,6 @@
 import time
 import unittest
+from typing import List
 
 from src.controller import Controller
 from src.document import Document
@@ -9,8 +10,8 @@ from src.model import Model
 
 class ViewPlaceholder:
 
-    def update(self, document: Document):
-        self.document = document
+    def update(self, lines: List[str]):
+        self.lines = lines
 
 
 class Base(unittest.TestCase):
@@ -39,8 +40,8 @@ class TestController(Base):
 
         self.controller.create_document(glyphs)
 
-        actual = ''.join(self.controller.view.document._glyphs)
-        expected = string
+        actual = self.controller.view.lines
+        expected = [string]
         self.assertEqual(actual, expected)
 
     def test_update_crdt(self):
@@ -53,16 +54,16 @@ class TestController(Base):
         pickled_crdt2 = crdt2.pickle()
 
         self.controller.update_crdt(pickled_crdt2)
-        actual = ''.join(self.controller.view.document._glyphs)
+        actual = self.controller.view.lines
 
-        self.assertTrue(string in actual, actual)
-        self.assertTrue(string2 in actual, actual)
+        self.assertTrue(string + string2 in actual
+                        or string2 + string in actual, actual)
 
     def _create_another_crdt(self, string):
         glyphs2 = list(string)
         model, view, controller, site_id = self.set_up_mvc()
         controller.create_document(glyphs2)
-        crdt = controller.view.document._crdt
+        crdt = controller.model.get_document().crdt
         controller.node.stop()
         return crdt
 
@@ -84,8 +85,8 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = ''.join(self.controller.view.document._glyphs)
-        self.assertEqual(actual, 'Hello world')
+        actual = self.controller.view.lines
+        self.assertEqual(actual, ['Hello world'])
         controller2.node.stop()
 
     def test_send_crdt(self):
@@ -108,11 +109,11 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = ''.join(controller2.view.document._glyphs)
+        actual = controller2.view.lines
         expected_possible_1 = string_to_add + string2
         expected_possible_2 = string2 + string_to_add
-        self.assertTrue(expected_possible_1 == actual
-                        or expected_possible_2 == actual,
+        self.assertTrue([expected_possible_1] == actual
+                        or [expected_possible_2] == actual,
                         f'actual: {actual}, expected:'
                         f' {expected_possible_1} or {expected_possible_2}')
         controller2.node.stop()
@@ -131,8 +132,8 @@ class TestController(Base):
 
         self.controller.insert('a', 1)
 
-        actual = ''.join(self.controller.view.document._glyphs)
-        expected = 'Haello World'
+        actual = self.controller.view.lines
+        expected = ['Haello World']
         self.assertEqual(actual, expected)
 
     def test_insert_but_other_node_also_updated(self):
@@ -149,8 +150,8 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = ''.join(controller2.view.document._glyphs)
-        expected = 'Haello World'
+        actual = controller2.view.lines
+        expected = ['Haello World']
         self.assertEqual(actual, expected)
         controller2.node.stop()
 
@@ -168,8 +169,8 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = ''.join(controller2.view.document._glyphs)
-        expected = 'Hllo World'
+        actual = controller2.view.lines
+        expected = ['Hllo World']
         self.assertEqual(actual, expected)
         controller2.node.stop()
 
@@ -185,8 +186,8 @@ class TestController(Base):
 
         time.sleep(self.wait_time)
 
-        actual = ''.join(self.controller.view.document._glyphs)
-        expected = 'Hello World'
+        actual = self.controller.view.lines
+        expected = ['Hello World']
         self.assertEqual(actual, expected)
         controller2.node.stop()
 
@@ -212,11 +213,8 @@ class TestController(Base):
 
         time.sleep(3)
 
-        print('controller1', self.controller.view.document.glyphs)
-        print('controller2', controller2.view.document.glyphs)
-
-        actual = ''.join(self.controller.view.document._glyphs)
-        expected = 'Hello World'
+        actual = self.controller.view.lines
+        expected = ['Hello World']
         self.assertEqual(actual, expected)
         controller2.node.stop()
         time.sleep(4)

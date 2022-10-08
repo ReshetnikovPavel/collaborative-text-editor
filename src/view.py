@@ -1,4 +1,4 @@
-from src.utils import to_string_list
+from typing import List
 
 
 class View:
@@ -11,7 +11,7 @@ class View:
         self.editor = editor
         # self.update(self.controller.model.get_document())
 
-    def update(self, document: 'Document'):
+    def update(self, lines: List[str]):
         # self.editor.screen.nodelay(True)
-        self.editor.buffer.lines = to_string_list(document.glyphs)
+        self.editor.buffer.lines = lines
 

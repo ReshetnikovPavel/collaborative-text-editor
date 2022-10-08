@@ -1,5 +1,4 @@
 import unittest
-import uuid
 from typing import List
 
 from src.crdt import CRDT
@@ -20,20 +19,16 @@ class TestDocument(Base):
         string = 'Hello World'
         document = Document(list(string), 0)
 
-        self.assertEqual(''.join(document._glyphs), string)
+        self.assertEqual(document.lines, [string])
         self.assertEqual(document._crdt.site_id, 0)
-        self.assertTrue(len(document._crdt.get_positions()) != 0)
-
-    def assert_glyphs_equal_to_string(self, glyphs_list: List[chr],
-                                      string: str):
-        self.assertEqual(''.join(glyphs_list), string)
+        self.assertTrue(len(document._crdt.positions) != 0)
 
     def test_insert(self):
         document = Document([], 0)
 
         document.insert('a', 0)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'a')
+        self.assertEqual(document.lines, ['a'])
 
     def test_insert_multiple(self):
         document = Document([], 0)
@@ -41,21 +36,21 @@ class TestDocument(Base):
         document.insert('a', 0)
         document.insert('b', 1)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'ab')
+        self.assertEqual(document.lines, ['ab'])
 
     def test_insert_inside(self):
         document = Document(list('abc'), 0)
 
         document.insert('d', 1)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'adbc')
+        self.assertEqual(document.lines, ['adbc'])
 
     def test_insert_first(self):
         document = Document(list('abc'), 0)
 
         document.insert('d', 0)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'dabc')
+        self.assertEqual(document.lines, ['dabc'])
 
     def test_insert_multiple_inside(self):
         document = Document(list('abc'), 0)
@@ -63,7 +58,7 @@ class TestDocument(Base):
         document.insert('d', 1)
         document.insert('e', 2)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'adebc')
+        self.assertEqual(document.lines, ['adebc'])
 
     def test_insert_index_greater_than_length(self):
         document = Document(list('abc'), 0)
@@ -75,7 +70,7 @@ class TestDocument(Base):
 
         document.insert('d', 3)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'abcd')
+        self.assertEqual(document.lines, ['abcd'])
 
     def test_get_next_position_not_last(self):
         document = Document(list('abc'), 0)
@@ -155,21 +150,21 @@ class TestDocument(Base):
 
         document.remove(1)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'ac')
+        self.assertEqual(document.lines, ['ac'])
 
     def test_remove_first(self):
         document = Document(list('abc'), 0)
 
         document.remove(0)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'bc')
+        self.assertEqual(document.lines, ['bc'])
 
     def test_remove_last(self):
         document = Document(list('abc'), 0)
 
         document.remove(2)
 
-        self.assert_glyphs_equal_to_string(document._glyphs, 'ab')
+        self.assertEqual(document.lines, ['ab'])
 
     def test_remove_out_of_bounds(self):
         document = Document(list('abc'), 0)
@@ -189,4 +184,4 @@ class TestDocument(Base):
         document.insert('b', 1)
         pickled_crdt = crdt.pickle()
         document.update_crdt(pickled_crdt)
-        self.assert_glyphs_equal_to_string(document._glyphs, 'abcab')
+        self.assertEqual(document.lines, ['abcab'])

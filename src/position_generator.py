@@ -91,6 +91,7 @@ class Position:
     def get_max(site: int) -> 'Position':
         return Position([Identifier.get_max(site)])
 
+
 class Identifier:
     def __init__(self, digit: int, site: int):
         self._check_digit(digit)
@@ -192,9 +193,6 @@ class Decimal:
     def _get_first_nonzero(self) -> int:
         return next((i for i, x in enumerate(self.digits) if x != 0), None)
 
-    # TODO: Мне кажется, что можно оптимизировать память,
-    # если во втором и третьем случае не создавать новый объект.
-    # Все равно их никто не изменяет
     def convert_to_position_between(self,
                                     before: Position,
                                     after: Position,
