@@ -15,21 +15,28 @@ class Editor:
         self.screen = stdscr
         self.controller = controller
         self.buffer = Buffer(glyph_list)
-        self.cursor = Cursor()
-        self.window = Window(curses.LINES - 1, curses.COLS - 1)
+        self.cursor = Cursor(0, 0)
+        self.window = Window(curses.LINES - 2, curses.COLS - 1)
         self.__cansi = Cansi(self.screen)
+        self.history_win = curses.newwin(curses.LINES//2, curses.COLS//2,
+                                         curses.LINES//4,
+                                         curses.COLS//4)
+        self.history_win.border()
+        self.screen_panel = panel.new_panel(self.screen)
+        self.history_win_panel = panel.new_panel(self.history_win)
+        self.history_win_panel.hide()
         self.visual_mode = False
+        self.history_mode = False
 
     def __set_up_screen_options(self) -> None:
         self.screen.timeout(500)
 
     def __draw_text(self) -> None:
         for row, line in enumerate(
-                self.buffer[self.window.row: self.window.row + self.window.num_rows]):
-            self.__cansi.addstr(row, 0, highlight_code(line))
+                self.buffer[self.window.row: self.window.row + self.window.num_rows-1]):
+            self.__cansi.addstr(row+1, 3, highlight_code(line))
 
     def __draw_lower_status_bar(self) -> None:
-        # address = f"[{self.controller.get_host_port()}]"
         height, width = self.screen.getmaxyx()
         mode = f"Mode: {'VISUAL' if self.visual_mode else 'INSERT'}"
         position = f"{self.cursor.row} {self.cursor.col}"
@@ -38,13 +45,35 @@ class Editor:
 
         self.__cansi.addstr(curses.LINES-1, 0, status_bar)
 
+    def __draw_upper_status_bar(self) -> None:
+        height, width = self.screen.getmaxyx()
+        filename = f"fib.py"
+        host, port = self.controller.get_host_port()
+        address = f"[{host}:{port}]"
+        body = f"{filename} {address}".center(width)
+        status_bar = f"\033[7m{body}\033[0m"
+
+        self.__cansi.addstr(0, 0, status_bar)
+
+    def __draw_line_numbers(self) -> None:
+        for i in range(self.buffer.bottom+1):
+            num = abs(self.cursor.row-i) % self.buffer.bottom
+            body = f"{abs(self.cursor.row-i)}".center(3)
+            self.__cansi.addstr(min(i+1, curses.LINES-2), 0, f"\033[7m{body}\033[0m")
+
     def __draw_screen(self) -> None:
         self.screen.clear()
         self.__draw_text()
+        self.__draw_upper_status_bar()
         self.__draw_lower_status_bar()
+        self.__draw_line_numbers()
         self.screen.move(
             *self.window.get_translated_cursor_coordinates(self.cursor))
         self.screen.refresh()
+        if self.history_mode:
+            self.history_win.border()
+            self.history_win.addstr(0, 2, "History")
+            self.history_win.refresh()
         # self.screen.nodelay(False)
 
     def __handle_keypress(self, key: int) -> None:
@@ -65,14 +94,13 @@ class Editor:
             self.window.down(self.buffer, self.cursor)
             self.window.horizontal_scroll(self.cursor)
         elif key == curses.KEY_BACKSPACE:
-            if self.cursor.row > 0:
-                self.cursor.left(self.buffer)
-                try:
-                    self.controller.remove(
-                        to_one_dimensional_index(
-                            self.cursor.position, self.buffer.lines))
-                except Exception as e:
-                    pass
+            if self.cursor.position == (0, 0):
+                return
+            self.cursor.left(self.buffer)
+            try:
+                self.controller.remove(to_one_dimensional_index(self.cursor.position, self.buffer.lines))
+            except Exception as e:
+                pass
         elif key == curses.KEY_DC:
             try:
                 self.controller.remove(
@@ -81,17 +109,22 @@ class Editor:
             except Exception as e:
                 pass
         elif key == curses.KEY_ENTER or key == 10:
-            try:
-                self.controller.insert("\n", to_one_dimensional_index(self.cursor.position, self.buffer.lines))
-                self.cursor.push_cursor_to_start_of_line(self.buffer)
-            except Exception as e:
-                pass
+            # try:
+            self.controller.insert("\n", to_one_dimensional_index(self.cursor.position, self.buffer.lines))
+            self.cursor.push_cursor_to_start_of_line(self.buffer)
+            # except Exception as e:
+            #     pass
 
             # self.buffer.split(self.__cursor.position)
         elif key == curses.KEY_RESIZE:
             self.window = Window(curses.LINES - 1, curses.COLS - 1)
+        elif key == curses.KEY_F2:
+            self.history_mode = not self.history_mode
+            self.history_win_panel.show()
+            # self.history_win.refresh()
         elif key == curses.KEY_F1:
             self.visual_mode = not self.visual_mode
+            self.__draw_lower_status_bar()
             first_iter = True
             while self.visual_mode:
                 if first_iter:
@@ -99,24 +132,13 @@ class Editor:
                     self.start_pos = self.cursor.position
                 key = self.screen.getch()
                 self.__handle_keypress(key)
-                self.screen.chgat(*self.cursor.position, 1, curses.A_REVERSE)
+                self.screen.chgat(self.cursor.row+1, self.cursor.col+3, 1, curses.A_REVERSE)
 
         elif self.visual_mode and key == ord('c'):
             self.visual_mode = False
             start = to_one_dimensional_index(self.start_pos, self.buffer.lines)
             curr_pos = to_one_dimensional_index(self.cursor.position, self.buffer.lines)
             pyperclip.copy("".join(self.controller.model.get_document().glyphs[start:curr_pos]))
-        # elif self.select_mode and key == ord('v'):
-        #     self.select_mode = False
-        #     # start = to_one_dimensional_index(self.start_pos, self.buffer.lines)
-        #     text = pyperclip.paste()
-        #     # curr_pos = to_one_dimensional_index(self.__cursor.position, self.buffer.lines)
-        #     for char in text:
-        #         try:
-        #             self.controller.insert(str(char), to_one_dimensional_index(self.__cursor.position, self.buffer.lines))
-        #         except:
-        #             pass
-        #         self.__cursor.right(self.buffer)
         else:
             try:
                 self.controller.insert(chr(key), to_one_dimensional_index(self.cursor.position, self.buffer.lines))
