@@ -1,10 +1,6 @@
-import curses
-
 from src.controller_server import ControllerServer
-from src.initializer import Initializer
 from src.model import Model
 # from src.editor import Editor
-from src.utils import *
 
 if __name__ == "__main__":
     site_id = 12345

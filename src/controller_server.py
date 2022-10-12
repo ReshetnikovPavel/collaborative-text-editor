@@ -6,6 +6,9 @@ from src.crdt import CRDT
 from src.model import Model
 from src.node import Node
 from src.view import View
+from datetime import datetime
+
+
 
 
 class ControllerServer:
@@ -23,8 +26,18 @@ class ControllerServer:
     def update_crdt(self, pickled_crdt: bytes, node):
         if (node.host, node.port) in self.rights and self.rights[(node.host, node.port)]:
             self.model.update_crdt(pickled_crdt)
+            self.log_versions()
         document = self.model.get_document()
         self.send_crdt(document.crdt)
+
+    def log_versions(self):
+        with open("server_history.txt", "a") as f:
+            f.write('\n################################')
+            f.write('\n' + str(datetime.now()))
+            f.write('\n################################')
+            for line in self.model.get_document().lines:
+                f.write('\n' + line)
+            f.write('\n################################')
 
     def send_crdt(self, crdt: CRDT):
         pickled_crdt = crdt.pickle()
