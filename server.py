@@ -16,15 +16,18 @@ if __name__ == "__main__":
 
     model.create_document([])
     while True:
-        command = input(':::')
-        if command == 'set_r':
-            try:
+        try:
+            command = input(':::')
+            if command == 'set_r':
                 (host, port, right) = input('host port 0/1:::').split(' ')
-            except:
-                continue
-            right = True if right == '1' else False
-            controller.set_rights(host, port, right)
-        elif command == 'r':
-            print(controller.rights)
-        elif command == 'txt':
-            print(controller.model.get_document().lines)
+                right = True if right == '1' else False
+                controller.set_rights(host, port, right)
+            elif command == 'r':
+                print(controller.rights)
+            elif command == 'txt':
+                print(controller.model.get_document().lines)
+            elif command == 'blame':
+                index = input('index:::')
+                print(controller.blame(int(index)))
+        except:
+            pass
