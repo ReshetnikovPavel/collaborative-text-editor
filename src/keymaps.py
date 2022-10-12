@@ -6,6 +6,11 @@ from src.buffer import Buffer
 
 
 class Command(ABC):
+    def __init__(self, cursor: Cursor, window: Window, buffer: Buffer):
+        self.cursor = cursor
+        self.window = window
+        self.buffer = buffer
+
     @abstractmethod
     def do(self):
         pass
@@ -17,14 +22,12 @@ class Command(ABC):
 
 class UpCommand(Command):
     def __init__(self, cursor: Cursor, window: Window, buffer: Buffer):
-        self.__cursor = cursor
-        self.__window = window
-        self.__buffer = buffer
+        super().__init__(cursor, window, buffer)
 
     def do(self):
-        self.__cursor.up(self.__buffer)
-        self.__window.up(self.__cursor)
-        self.__window.horizontal_scroll(self.__cursor)
+        self.cursor.up(self.buffer)
+        self.window.up(self.cursor)
+        self.window.horizontal_scroll(self.cursor)
 
     def undo(self):
         pass
@@ -32,14 +35,12 @@ class UpCommand(Command):
 
 class DownCommand(Command):
     def __init__(self, cursor: Cursor, window: Window, buffer: Buffer):
-        self.__cursor = cursor
-        self.__window = window
-        self.__buffer = buffer
+        super().__init__(cursor, window, buffer)
 
     def do(self):
-        self.__cursor.down(self.__buffer)
-        self.__window.down(self.__buffer, self.__cursor)
-        self.__window.horizontal_scroll(self.__cursor)
+        self.cursor.down(self.buffer)
+        self.window.down(self.buffer, self.cursor)
+        self.window.horizontal_scroll(self.cursor)
 
     def undo(self):
         raise NotImplementedError()
@@ -47,14 +48,12 @@ class DownCommand(Command):
 
 class LeftCommand(Command):
     def __init__(self, cursor: Cursor, window: Window, buffer: Buffer):
-        self.__cursor = cursor
-        self.__window = window
-        self.__buffer = buffer
+        super().__init__(cursor, window, buffer)
 
     def do(self):
-        self.__cursor.left(self.__buffer)
-        self.__window.up(self.__cursor)
-        self.__window.horizontal_scroll(self.__cursor)
+        self.cursor.left(self.buffer)
+        self.window.up(self.cursor)
+        self.window.horizontal_scroll(self.cursor)
 
     def undo(self):
         raise NotImplementedError()
@@ -62,14 +61,12 @@ class LeftCommand(Command):
 
 class RightCommand(Command):
     def __init__(self, cursor: Cursor, window: Window, buffer: Buffer):
-        self.__cursor = cursor
-        self.__window = window
-        self.__buffer = buffer
+        super().__init__(cursor, window, buffer)
 
     def do(self):
-        self.__cursor.right(self.__buffer)
-        self.__window.down(self.__buffer, self.__cursor)
-        self.__window.horizontal_scroll(self.__cursor)
+        self.cursor.right(self.buffer)
+        self.window.down(self.buffer, self.cursor)
+        self.window.horizontal_scroll(self.cursor)
 
     def undo(self):
         raise NotImplementedError()
@@ -104,7 +101,7 @@ class EnterCommand(Command):
         self.__buffer.split(self.__cursor.position)
 
     def undo(self):
-        self.__buffer.join(self.    last_position)
+        self.__buffer.join(self.last_position)
 
 
 class InsertCommand:

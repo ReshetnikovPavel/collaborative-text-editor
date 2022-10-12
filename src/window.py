@@ -35,4 +35,4 @@ class Window:
             num_pages * self.__num_cols - right_margin - left_margin, 0)
 
     def get_translated_cursor_coordinates(self, cursor: Cursor) -> tuple[int, int]:
-        return cursor.row - self.row, cursor.col - self.col
+        return min(cursor.row - self.row, self.__num_rows), min(cursor.col - self.col, self.__num_cols)
