@@ -10,19 +10,19 @@ class Node(node.Node):
 
     def outbound_node_connected(self, node):
         super().outbound_node_connected(node)
-        self.controller.on_someone_joined()
+        self.controller.on_someone_joined(node)
 
     def inbound_node_connected(self, node):
         super().inbound_node_connected(node)
-        self.controller.on_someone_joined()
+        self.controller.on_someone_joined(node)
 
     def node_message(self, node, data):
-        self.process_data(data)
+        self.process_data(data, node)
 
-    def process_data(self, data):
+    def process_data(self, data, node):
         if isinstance(data, bytes):
-            self.controller.update_crdt(data)
+            self.controller.update_crdt(data, node)
 
-    def debug_print(self, message):
-        with open("debug.txt", "a") as f:
-            f.write(message + "\n")
+    # def debug_print(self, message):
+    #     with open("debug.txt", "a") as f:
+    #         f.write(message + "\n")

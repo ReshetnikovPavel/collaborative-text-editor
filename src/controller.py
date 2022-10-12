@@ -20,7 +20,7 @@ class Controller:
         self.node = Node(self, '127.0.0.1', self.site_id, self.site_id)
         self.node.start()
 
-    def update_crdt(self, pickled_crdt: bytes):
+    def update_crdt(self, pickled_crdt: bytes, node):
         self.model.update_crdt(pickled_crdt)
         document = self.model.get_document()
         self.view.update(document.lines)
@@ -38,7 +38,7 @@ class Controller:
         self.model.delete_current_document()
         self.node.connect_with_node(host, port)
 
-    def on_someone_joined(self):
+    def on_someone_joined(self, node):
         self.send_crdt(self.model.get_document().crdt)
 
     def insert(self, glyph: chr, index: int):

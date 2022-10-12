@@ -50,6 +50,11 @@ class CRDT:
         seq = pickle.loads(other)
         self._seq.merge(seq)
 
+    @synchronized
+    def replace(self, other: bytes):
+        seq = pickle.loads(other)
+        self._seq = seq
+
     def __repr__(self):
         return f'CRDT({self._seq})'
 
