@@ -1,8 +1,14 @@
+import sys
+
 from src.controller_server import ControllerServer
 from src.model import Model
-# from src.editor import Editor
+from src.utils import *
+from src.document import Document
 
 if __name__ == "__main__":
+    args = parse_args("filename")
+    with open(args.filename) as f:
+        text = f.read()
     site_id = 12345
     model = Model(site_id)
     controller = ControllerServer(site_id)
@@ -10,7 +16,7 @@ if __name__ == "__main__":
     model.initialise(controller)
     controller.initialise(model, None)
 
-    model.create_document([])
+    model.create_document(text)
     while True:
         try:
             command = input(':::')
@@ -25,5 +31,7 @@ if __name__ == "__main__":
             elif command == 'blame':
                 index = input('index:::')
                 print(controller.blame(int(index)))
-        except:
+            elif command == 'q':
+                sys.exit()
+        except Exception:
             pass
