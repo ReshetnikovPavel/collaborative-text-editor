@@ -31,12 +31,8 @@ class ControllerServer:
 
     def log_versions(self):
         with open("server_history.txt", "a") as f:
-            f.write('\n################################')
-            f.write('\n' + str(datetime.now()))
-            f.write('\n################################')
-            for line in self.model.get_document().lines:
-                f.write('\n' + line)
-            f.write('\n################################')
+            f.write(f'\n[{str(datetime.now())}]')
+            f.write('\n' + self.model.get_document().lines)
 
     def send_crdt(self, crdt: CRDT):
         pickled_crdt = crdt.pickle()
