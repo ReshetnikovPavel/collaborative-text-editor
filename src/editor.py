@@ -57,9 +57,11 @@ class Editor:
         height, width = self.screen.getmaxyx()
         filename = self.controller.view.doc_name
         host, port = self.controller.get_host_port()
+        instruction = f"<F1> Change Mode | <F2> History | <F3> Blame | <F4> Save PDF | <F5> Save"
         address = f"[{host}:{port}]"
-        body = f"{filename} {address}".center(width)
-        status_bar = f"\033[7m{body}\033[0m"
+        # body = f"{instruction}".center(width)
+        space_count = width - len(instruction) - len(address) - len(filename) - 1
+        status_bar = f"\033[7m{instruction}{' '*space_count}{filename} {address}\033[0m"
 
         self.__cansi.addstr(0, 0, status_bar)
 
