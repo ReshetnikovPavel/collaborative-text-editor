@@ -3,7 +3,7 @@ import curses
 
 from src.initializer import Initializer
 # from src.editor import Editor
-from src.utils import *
+from src.utils import * 
 
 
 def main(stdscr):

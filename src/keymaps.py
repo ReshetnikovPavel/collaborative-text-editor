@@ -74,34 +74,30 @@ class RightCommand(Command):
 
 class DeleteCommand(Command):
     def __init__(self, cursor: Cursor, window: Window, buffer: Buffer):
+        super().__init__(cursor, window, buffer)
         self.last_symbol = None
         self.last_position = None
-        self.__cursor = cursor
-        self.__window = window
-        self.__buffer = buffer
 
     def do(self):
-        self.last_symbol = self.__buffer[self.__cursor.row][self.__cursor.col]
-        self.last_position = self.__cursor.position
-        self.__buffer.delete(self.__cursor.position, count=1)
+        self.last_symbol = self.buffer[self.cursor.row][self.cursor.col]
+        self.last_position = self.cursor.position
+        self.buffer.delete(self.cursor.position, count=1)
 
     def undo(self):
-        self.__buffer.insert(self.last_position, self.last_symbol)
+        self.buffer.insert(self.last_position, self.last_symbol)
 
 
 class EnterCommand(Command):
     def __init__(self, cursor: Cursor, window: Window, buffer: Buffer):
+        super().__init__(cursor, window, buffer)
         self.last_position = None
-        self.__cursor = cursor
-        self.__window = window
-        self.__buffer = buffer
 
     def do(self):
-        self.last_position = self.__cursor.position
-        self.__buffer.split(self.__cursor.position)
+        self.last_position = self.cursor.position
+        self.buffer.split(self.cursor.position)
 
     def undo(self):
-        self.__buffer.join(self.last_position)
+        self.buffer.join(self.last_position)
 
 
 class InsertCommand:
