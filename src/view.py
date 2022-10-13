@@ -11,7 +11,7 @@ class View:
         self.editor = editor
         # self.update(self.controller.model.get_document())
 
-    def update(self, lines: List[str]):
+    def update(self, lines: str):
         # self.editor.screen.nodelay(True)
-        self.editor.buffer.lines = lines
+        self.editor.buffer.lines = lines.split('\n')
 

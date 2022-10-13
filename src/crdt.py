@@ -19,8 +19,8 @@ class CRDT:
 
     @property
     @synchronized
-    def lines(self) -> List[str]:
-        return self._seq.to_string().splitlines()
+    def lines(self):
+        return self._seq.to_string()
 
     @property
     @synchronized
@@ -31,6 +31,8 @@ class CRDT:
     def insert(self, element: chr, position: Position):
         if self._seq.contains_id(position):
             raise ValueError(f'Position already exists: {position}')
+        if position in self._seq.ids_to_remove:
+            self._seq.ids_to_remove.remove(position)
         self._seq.add(element, position)
 
     @synchronized

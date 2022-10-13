@@ -31,6 +31,10 @@ if __name__ == "__main__":
             elif command == 'blame':
                 index = input('index:::')
                 print(controller.blame(int(index)))
+            elif command == 'r_all':
+                for (host, port) in controller.rights:
+                    controller.set_rights(host, port, True)
+
             elif command == 'q':
                 sys.exit()
         except Exception:

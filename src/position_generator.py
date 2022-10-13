@@ -1,3 +1,4 @@
+import uuid
 from typing import List, Generator
 
 
@@ -49,6 +50,7 @@ def _generate_between_arithmetically(start: 'Position',
 class Position:
     def __init__(self, ids: List['Identifier']):
         self.ids = ids
+        self.uuid = uuid.uuid1()
 
     def __lt__(self, other: 'Position') -> bool:
         for i in range(min(len(self.ids), len(other.ids))):
@@ -57,7 +59,7 @@ class Position:
         return len(self.ids) < len(other.ids)
 
     def __eq__(self, other: 'Position') -> bool:
-        return self.ids == other.ids
+        return self.ids == other.ids and self.uuid == other.uuid
 
     def __add__(self, other: 'Position') -> 'Position':
         return Position(self.ids + other.ids)

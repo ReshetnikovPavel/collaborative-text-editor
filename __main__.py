@@ -6,7 +6,7 @@ from src.initializer import Initializer
 from src.utils import * 
 
 
-def main(stdscr):
+def main(stdscr):               
     args = parse_args("filename", "server", "host", "port")
     with open(args.filename) as f:
         text = f.read()

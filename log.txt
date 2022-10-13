@@ -1,0 +1,502 @@
+h 104 (0, 8)
+['# collaborative-text-editor']
+e 101 (0, 9)
+['# collabhorative-text-editor']
+l 108 (0, 10)
+['# collabheorative-text-editor']
+l 108 (0, 11)
+['# collabhelorative-text-editor']
+o 111 (0, 12)
+['# collabhellorative-text-editor']
+h 104 (0, 8)
+['# collaborative-text-editor']
+e 101 (0, 9)
+['# collaborative-text-editor']
+l 108 (0, 10)
+['# collaboerative-text-editor']
+l 108 (0, 11)
+['# collaboelrative-text-editor']
+o 111 (0, 12)
+['# collaboellrative-text-editor']
+l 108 (0, 4)
+['# coaborative-text-editor']
+l 108 (0, 5)
+['# colaborative-text-editor']
+l 108 (0, 4)
+['# coaborative-text-editor']
+l 108 (0, 5)
+['# colaborative-text-editor']
+l 108 (0, 4)
+['# coaborative-text-editor']
+l 108 (0, 5)
+['# colaborative-text-editor']
+l 108 (0, 4)
+['# coaborative-text-editor']
+l 108 (0, 5)
+['# colaborative-text-editor']
+l 108 (0, 6)
+['# collaborative-text-editor']
+l 108 (0, 7)
+['# colllaborative-text-editor']
+l 108 (0, 8)
+['# collllaborative-text-editor']
+l 108 (0, 4)
+['# coaborative-text-editor']
+l 108 (0, 5)
+['# colaborative-text-editor']
+l 108 (0, 4)
+['# coaborative-text-editor']
+l 108 (0, 5)
+['# colaborative-text-editor']
+f 102 (0, 4)
+['# collaborative-text-editor']
+f 102 (0, 4)
+['# collaborative-text-editor']
+f 102 (0, 4)
+['# collaborative-text-editor']
+f 102 (0, 5)
+['# cofllaborative-text-editor']
+f 102 (0, 6)
+['# coffllaborative-text-editor']
+f 102 (0, 7)
+['# cofffllaborative-text-editor']
+r 114 (0, 9)
+['# collaboative-text-editor']
+r 114 (0, 9)
+['# collaboative-text-editor']
+r 114 (0, 9)
+['# collaboative-text-editor']
+r 114 (0, 9)
+['# collaboative-text-editor']
+r 114 (0, 10)
+['# collaborative-text-editor']
+r 114 (0, 11)
+['# collaborrative-text-editor']
+r 114 (0, 12)
+['# collaborrrative-text-editor']
+r 114 (0, 9)
+['# collaboative-text-editor']
+h 104 (0, 10)
+['# collaborative-text-editor']
+h 104 (0, 11)
+['# collaborhative-text-editor']
+h 104 (0, 9)
+['# collaboative-text-editor']
+h 104 (0, 10)
+['# collabohative-text-editor']
+h 104 (0, 11)
+['# collabohhative-text-editor']
+r 114 (0, 9)
+['# collaboative-text-editor']
+o 111 (0, 8)
+['# collabative-text-editor']
+r 114 (0, 9)
+['# collaboative-text-editor']
+r 114 (0, 10)
+['# collaborative-text-editor']
+# 35 (1, 0)
+['# collaborrative-text-editor', '']
+  32 (1, 1)
+['# collaborrative-text-editor', '#']
+c 99 (1, 2)
+['# collaborrative-text-editor', '# ']
+o 111 (1, 3)
+['# collaborrative-text-editor', '# c']
+l 108 (1, 4)
+['# collaborrative-text-editor', '# co']
+l 108 (1, 5)
+['# collaborrative-text-editor', '# col']
+a 97 (1, 6)
+['# collaborrative-text-editor', '# coll']
+b 98 (1, 7)
+['# collaborrative-text-editor', '# colla']
+o 111 (1, 8)
+['# collaborrative-text-editor', '# collab']
+r 114 (1, 9)
+['# collaborrative-text-editor', '# collabo']
+r 114 (1, 10)
+['# collaborrative-text-editor', '# collabor']
+a 97 (1, 11)
+['# collaborrative-text-editor', '# collaborr']
+t 116 (1, 12)
+['# collaborrative-text-editor', '# collaborra']
+i 105 (1, 13)
+['# collaborrative-text-editor', '# collaborrat']
+v 118 (1, 14)
+['# collaborrative-text-editor', '# collaborrati']
+e 101 (1, 15)
+['# collaborrative-text-editor', '# collaborrativ']
+- 45 (1, 16)
+['# collaborrative-text-editor', '# collaborrative']
+t 116 (1, 17)
+['# collaborrative-text-editor', '# collaborrative-']
+e 101 (1, 18)
+['# collaborrative-text-editor', '# collaborrative-t']
+x 120 (1, 19)
+['# collaborrative-text-editor', '# collaborrative-te']
+t 116 (1, 20)
+['# collaborrative-text-editor', '# collaborrative-tex']
+- 45 (1, 21)
+['# collaborrative-text-editor', '# collaborrative-text']
+e 101 (1, 22)
+['# collaborrative-text-editor', '# collaborrative-text-']
+d 100 (1, 23)
+['# collaborrative-text-editor', '# collaborrative-text-e']
+i 105 (1, 24)
+['# collaborrative-text-editor', '# collaborrative-text-ed']
+t 116 (1, 25)
+['# collaborrative-text-editor', '# collaborrative-text-edi']
+o 111 (1, 26)
+['# collaborrative-text-editor', '# collaborrative-text-edit']
+r 114 (1, 27)
+['# collaborrative-text-editor', '# collaborrative-text-edito']
+d 100 (2, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', '']
+f 102 (2, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'd']
+k 107 (2, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'df']
+d 100 (2, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'dfk']
+f 102 (2, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'dfkd']
+b 98 (3, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'dfkdf', '']
+d 100 (3, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'dfkdf', 'b']
+n 110 (3, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'dfkdf', 'bd']
+f 102 (3, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'dfkdf', 'bdn']
+c 99 (2, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', '']
+l 108 (2, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'c']
+a 97 (2, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'cl']
+s 115 (2, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'cla']
+s 115 (2, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'clas']
+  32 (2, 5)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class']
+C 67 (2, 6)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class ']
+l 108 (2, 7)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class C']
+a 97 (2, 8)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Cl']
+s 115 (2, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Cla']
+s 115 (2, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Clas']
+( 40 (2, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class']
+: 58 (2, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class']
+  32 (3, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '']
+  32 (3, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', ' ']
+  32 (3, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '  ']
+  32 (3, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '   ']
+d 100 (3, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    ']
+e 101 (3, 5)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    d']
+f 102 (3, 6)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    de']
+  32 (3, 7)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def']
+_ 95 (3, 8)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def ']
+_ 95 (3, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def _']
+i 105 (3, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __']
+n 110 (3, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __i']
+i 105 (3, 12)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __in']
+t 116 (3, 13)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __ini']
+_ 95 (3, 14)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init']
+_ 95 (3, 15)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init_']
+( 40 (3, 16)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__']
+) 41 (3, 17)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__(']
+: 58 (3, 18)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__()']
+  32 (4, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '']
+  32 (4, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', ' ']
+  32 (4, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '  ']
+  32 (4, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '   ']
+  32 (4, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '    ']
+  32 (4, 5)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '     ']
+  32 (4, 6)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '      ']
+  32 (4, 7)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '       ']
+s 115 (4, 8)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        ']
+e 101 (4, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        s']
+l 108 (4, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        se']
+f 102 (4, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        sel']
+. 46 (4, 12)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self']
+i 105 (4, 13)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.']
+n 110 (4, 14)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.i']
+v 118 (4, 13)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.']
+a 97 (4, 14)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.v']
+r 114 (4, 15)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.va']
+  32 (4, 16)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var']
+= 61 (4, 17)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var ']
+  32 (4, 18)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var =']
+5 53 (4, 19)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = ']
+  32 (5, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '']
+  32 (5, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', ' ']
+  32 (5, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '  ']
+  32 (5, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '   ']
+  32 (5, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '    ']
+  32 (5, 5)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '     ']
+  32 (5, 6)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '      ']
+  32 (5, 7)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '       ']
+f 102 (5, 8)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ']
+k 107 (5, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        f']
+k 107 (5, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fk']
+e 101 (5, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fkk']
+f 102 (5, 12)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fkke']
+f 102 (5, 8)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ']
+d 100 (5, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        f']
+f 102 (5, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fd']
+d 100 (5, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+f 102 (5, 12)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdfd']
+f 102 (5, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        f']
+d 100 (5, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ff']
+f 102 (5, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ffd']
+n 110 (5, 12)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ffdf']
+n 110 (5, 13)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ffdfn']
+j 106 (5, 14)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ffdfnn']
+d 100 (5, 15)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ffdfnnj']
+f 102 (5, 16)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ffdfnnjd']
+\ 92 (5, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        ffd']
+d 100 (5, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        f']
+f 102 (5, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fd']
+\ 92 (3, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (3, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '\\    def __init__():', '        self.var = 5', '        fdf']
+; 59 (3, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '\\d    def __init__():', '        self.var = 5', '        fdf']
+v 118 (3, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '\\d;    def __init__():', '        self.var = 5', '        fdf']
+m 109 (3, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '\\d;v    def __init__():', '        self.var = 5', '        fdf']
+; 59 (3, 5)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '\\d;vm    def __init__():', '        self.var = 5', '        fdf']
+d 100 (3, 6)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '\\d;vm;    def __init__():', '        self.var = 5', '        fdf']
+d 100 (2, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (2, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (2, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (2, 5)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (2, 6)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (2, 7)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+y 121 (2, 8)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+g 103 (2, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+g 103 (2, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+y 121 (2, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+g 103 (2, 12)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+y 121 (3, 0)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (3, 1)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+k 107 (3, 2)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+n 110 (3, 3)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (3, 4)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+n 110 (3, 5)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (3, 6)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+k 107 (3, 7)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+n 110 (3, 8)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+d 100 (3, 9)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+k 107 (3, 10)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+n 110 (3, 11)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+s 115 (3, 17)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__():', '        self.var = 5', '        fdf']
+e 101 (3, 18)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__(s):', '        self.var = 5', '        fdf']
+l 108 (3, 19)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__(se):', '        self.var = 5', '        fdf']
+f 102 (3, 20)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__(sel):', '        self.var = 5', '        fdf']
+s 115 (3, 12)
+['# collaborrative-text-editor', '# collaborrative-text-editor', 'class Class:', '    def __init__(self):', '        self.var = 5', '        fdf']
+d 100 (0, 7)
+['# collaborative-text-editor']
+d 100 (0, 8)
+['# collaborative-text-editor']
+d 100 (0, 9)
+['# collaborative-text-editor']
+c 99 (1, 0)
+['# collaborative-text-editor', '']
+a 97 (1, 1)
+['# collaborative-text-editor', 'c']
+l 108 (1, 2)
+['# collaborative-text-editor', 'ca']
+l 108 (1, 1)
+['# collaborative-text-editor', 'c']
+s 115 (1, 2)
+['# collaborative-text-editor', 'cl']
+s 115 (1, 3)
+['# collaborative-text-editor', 'cls']
+  32 (1, 4)
+['# collaborative-text-editor', 'clss']
+a 97 (1, 2)
+['# collaborative-text-editor', 'cl']
+s 115 (1, 3)
+['# collaborative-text-editor', 'cla']
+s 115 (1, 4)
+['# collaborative-text-editor', 'clas']
+  32 (1, 5)
+['# collaborative-text-editor', 'class']
+C 67 (1, 6)
+['# collaborative-text-editor', 'class ']
+l 108 (1, 7)
+['# collaborative-text-editor', 'class C']
+a 97 (1, 8)
+['# collaborative-text-editor', 'class Cl']
+s 115 (1, 9)
+['# collaborative-text-editor', 'class Cla']
+s 115 (1, 10)
+['# collaborative-text-editor', 'class Clas']
+: 58 (1, 11)
+['# collaborative-text-editor', 'class Class']
+  32 (2, 0)
+['# collaborative-text-editor', 'class Class:', '']
+  32 (2, 1)
+['# collaborative-text-editor', 'class Class:', ' ']
+  32 (2, 2)
+['# collaborative-text-editor', 'class Class:', '  ']
+  32 (2, 3)
+['# collaborative-text-editor', 'class Class:', '   ']
+p 112 (2, 4)
+['# collaborative-text-editor', 'class Class:', '    ']
+a 97 (2, 5)
+['# collaborative-text-editor', 'class Class:', '    p']
+s 115 (2, 6)
+['# collaborative-text-editor', 'class Class:', '    pa']
+s 115 (2, 7)
+['# collaborative-text-editor', 'class Class:', '    pas']
+h 104 (3, 0)
+['# collaborative-text-editor', 'class Class:', '    pass', '']
+H 72 (3, 0)
+['# collaborative-text-editor', 'class Class:', '    pass', '']
+e 101 (3, 1)
+['# collaborative-text-editor', 'class Class:', '    pass', 'H']
+l 108 (3, 2)
+['# collaborative-text-editor', 'class Class:', '    pass', 'He']
+l 108 (3, 3)
+['# collaborative-text-editor', 'class Class:', '    pass', 'Hel']
+o 111 (3, 4)
+['# collaborative-text-editor', 'class Class:', '    pass', 'Hell']
+f 102 (0, 0)
+['# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+n 110 (0, 1)
+['f# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+d 100 (0, 2)
+['fn# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+j 106 (0, 3)
+['fnd# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+b 98 (0, 4)
+['fndj# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+f 102 (0, 5)
+['fndjb# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+k 107 (0, 6)
+['fndjbf# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+d 100 (0, 7)
+['fndjbfk# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+b 98 (0, 8)
+['fndjbfkd# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+f 102 (0, 9)
+['fndjbfkdb# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+j 106 (0, 10)
+['fndjbfkdbf# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+b 98 (0, 11)
+['fndjbfkdbfj# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+k 107 (0, 12)
+['fndjbfkdbfjb# collaborative-text-editor', 'class Class:', '    pass', 'Hello']
+j 106 (0, 13)
+['fndjbfkdbfjbk# collaborative-text-editor', 'class Class:', '    pass', 'Hello']

@@ -42,12 +42,18 @@ class Controller:
         self.send_crdt(self.model.get_document().crdt)
 
     def insert(self, glyph: chr, index: int):
-        with self.document_to_be_updated() as document:
-            document.insert(glyph, index)
+        try:
+            with self.document_to_be_updated() as document:
+                document.insert(glyph, index)
+        except ValueError:
+            pass
 
     def remove(self, index: int):
-        with self.document_to_be_updated() as document:
-            document.remove(index)
+        try:
+            with self.document_to_be_updated() as document:
+                document.remove(index)
+        except ValueError:
+            pass
 
     def get_host_port(self):
         return self.node.host, self.node.port

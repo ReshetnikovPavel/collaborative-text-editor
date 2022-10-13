@@ -12,10 +12,11 @@ from src.utils import parse_args, to_one_dimensional_index
 
 
 class Editor:
-    def __init__(self, stdscr, glyph_list: str, controller) -> None:
+    def __init__(self, stdscr, text: str, controller) -> None:
         self.screen = stdscr
+        self.__set_up_screen_options()
         self.controller = controller
-        self.buffer = Buffer(glyph_list)
+        self.buffer = Buffer(text)
         self.cursor = Cursor(0, 0)
         self.window = Window(curses.LINES - 2, curses.COLS - 1)
         self.__cansi = Cansi(self.screen)
@@ -57,7 +58,7 @@ class Editor:
 
     def __draw_line_numbers(self) -> None:
         for i in range(self.buffer.bottom+1):
-            num = abs(self.cursor.row-i) % self.buffer.bottom
+            num = abs(self.cursor.row-i) % max(1, self.buffer.bottom)
             body = f"{abs(self.cursor.row-i)}".center(3)
             self.__cansi.addstr(min(i+1, curses.LINES-2), 0, f"\033[7m{body}\033[0m")
 
@@ -104,6 +105,8 @@ class Editor:
                 pass
         elif key == curses.KEY_DC:
             try:
+                if self.cursor.position < (self.buffer.bottom, len(self.buffer.lines[-1])):
+                    return
                 self.controller.remove(
                     to_one_dimensional_index(
                         self.cursor.position, self.buffer.lines))
@@ -142,15 +145,17 @@ class Editor:
             self.visual_mode = False
             start = to_one_dimensional_index(self.start_pos, self.buffer.lines)
             curr_pos = to_one_dimensional_index(self.cursor.position, self.buffer.lines)
-            pyperclip.copy("".join(self.controller.model.get_document().glyphs[start:curr_pos]))
-        elif ord(" ") <= ord(chr(key)) <= ord("~"):
-            try:
-                self.controller.insert(chr(key), to_one_dimensional_index(self.cursor.position, self.buffer.lines))
-                self.cursor.right(self.buffer)
-                self.window.down(self.buffer, self.cursor)
-                self.window.horizontal_scroll(self.cursor)
-            except Exception as e:
-                pass
+            pyperclip.copy("".join(self.controller.model.get_document().lines[start:curr_pos]))
+        elif ord(" ") <= key <= ord("~"):
+            # try:
+            with open("log.txt", "a") as f:
+                f.write(f"{chr(key)} {key} {self.cursor.position}\n{self.buffer.lines}\n")
+            self.controller.insert(chr(key), to_one_dimensional_index(self.cursor.position, self.buffer.lines))
+            self.cursor.right(self.buffer)
+            self.window.down(self.buffer, self.cursor)
+            self.window.horizontal_scroll(self.cursor)
+            # except Exception as e:
+            #     pass
             # self.screen.touchwin()
             # self.buffer.insert(self.__cursor.position, chr(key))
 
