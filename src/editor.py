@@ -6,6 +6,7 @@ from cansi import Cansi
 from src.buffer import Buffer
 from src.cursor import Cursor
 from src.window import Window
+from src.popup import Popup
 from src.formatter import highlight_code
 from src.utils import parse_args, to_one_dimensional_index
 
@@ -18,15 +19,14 @@ class Editor:
         self.cursor = Cursor(0, 0)
         self.window = Window(curses.LINES - 2, curses.COLS - 1)
         self.__cansi = Cansi(self.screen)
-        self.history_win = curses.newwin(curses.LINES//2, curses.COLS//2,
-                                         curses.LINES//4,
-                                         curses.COLS//4)
-        self.history_win.border()
+        self.history = Popup("History",
+                             curses.LINES//2,
+                             curses.COLS//2,
+                             curses.LINES//4,
+                             curses.COLS//4)
+        self.history.hide()
         self.screen_panel = panel.new_panel(self.screen)
-        self.history_win_panel = panel.new_panel(self.history_win)
-        self.history_win_panel.hide()
         self.visual_mode = False
-        self.history_mode = False
 
     def __set_up_screen_options(self) -> None:
         self.screen.timeout(500)
@@ -70,21 +70,22 @@ class Editor:
         self.screen.move(
             *self.window.get_translated_cursor_coordinates(self.cursor))
         self.screen.refresh()
-        if self.history_mode:
-            self.history_win.border()
-            self.history_win.addstr(0, 2, "History")
-            self.history_win.refresh()
+        # if self.history.is_active:
+        #     self.history.activate([f"log{i}" for i in range(50)])
+        #     self.history.activate(["log1", "log2", "log3", "log4"])
         # self.screen.nodelay(False)
 
     def __handle_keypress(self, key: int) -> None:
-        if key == curses.KEY_UP:
+        if key == curses.KEY_UP and not self.history.is_active:
             self.cursor.up(self.buffer)
             self.window.up(self.cursor)
             self.window.horizontal_scroll(self.cursor)
-        elif key == curses.KEY_DOWN:
+            # self.history.handle_keypress(key)
+        elif key == curses.KEY_DOWN and not self.history.is_active:
             self.cursor.down(self.buffer)
             self.window.down(self.buffer, self.cursor)
             self.window.horizontal_scroll(self.cursor)
+            # self.history.handle_keypress(key)
         elif key == curses.KEY_LEFT:
             self.cursor.left(self.buffer)
             self.window.up(self.cursor)
@@ -119,9 +120,12 @@ class Editor:
         elif key == curses.KEY_RESIZE:
             self.window = Window(curses.LINES - 1, curses.COLS - 1)
         elif key == curses.KEY_F2:
-            self.history_mode = not self.history_mode
-            self.history_win_panel.show()
-            # self.history_win.refresh()
+            self.history.is_active = not self.history.is_active
+            while self.history.is_active:
+                self.history.activate([f"log{i}" for i in range(50)])
+                key = self.screen.getch()
+                self.history.handle_keypress(key)
+                self.__handle_keypress(key)
         elif key == curses.KEY_F1:
             self.visual_mode = not self.visual_mode
             self.__draw_lower_status_bar()
@@ -139,7 +143,7 @@ class Editor:
             start = to_one_dimensional_index(self.start_pos, self.buffer.lines)
             curr_pos = to_one_dimensional_index(self.cursor.position, self.buffer.lines)
             pyperclip.copy("".join(self.controller.model.get_document().glyphs[start:curr_pos]))
-        else:
+        elif ord(" ") <= ord(chr(key)) <= ord("~"):
             try:
                 self.controller.insert(chr(key), to_one_dimensional_index(self.cursor.position, self.buffer.lines))
                 self.cursor.right(self.buffer)
