@@ -26,9 +26,9 @@ class ControllerClient:
 
         data = pickle.loads(pickled_crdt)
         if isinstance(data, tuple):
-            if data[0] == str(self.node.host) and data[1] == str(self.node.port):
+            if str(data[0]) == str(self.node.host) and str(data[1]) == str(self.node.port):
                 self.can_edit = data[2]
-                return
+            return
         if not self.can_edit:
             self.model.get_document().crdt.replace(pickled_crdt)
         else:

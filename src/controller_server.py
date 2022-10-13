@@ -24,7 +24,7 @@ class ControllerServer:
         self.node.start()
 
     def update_crdt(self, pickled_crdt: bytes, node):
-        if (node.host, node.port) in self.rights and self.rights[(node.host, node.port)]:
+        if (str(node.host), str(node.port)) in self.rights and self.rights[(str(node.host), str(node.port))]:
             self.model.update_crdt(pickled_crdt)
             self.log_versions()
         document = self.model.get_document()
@@ -53,7 +53,7 @@ class ControllerServer:
 
     def on_someone_joined(self, node):
         self.send_crdt(self.model.get_document().crdt)
-        self.rights[(node.host, node.port)] = False
+        self.rights[(str(node.host), str(node.port))] = False
 
     def insert(self, glyph: chr, index: int):
         with self.document_to_be_updated() as document:
@@ -70,8 +70,8 @@ class ControllerServer:
         return self.node.id
 
     def set_rights(self, host, port, can_write: bool):
-        if (host, port) in self.rights:
-            self.rights[(host, port)] = can_write
+        if (str(host), str(port)) in self.rights:
+            self.rights[(str(host), str(port))] = can_write
         self.node.send_to_nodes(pickle.dumps((host, port, can_write)), compression='zlib')
         self.send_crdt(self.model.get_document().crdt)
 
