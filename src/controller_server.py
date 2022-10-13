@@ -9,14 +9,13 @@ from src.view import View
 from datetime import datetime
 
 
-
-
 class ControllerServer:
-    def __init__(self, site_id: int):
+    def __init__(self, site_id: int, doc_name: str):
         self.node = None
         self.model = None
         self.site_id = site_id
         self.rights = {}
+        self.doc_name = doc_name
 
     def initialise(self, model: Model, view):
         self.model = model
@@ -53,6 +52,7 @@ class ControllerServer:
 
     def on_someone_joined(self, node):
         self.send_crdt(self.model.get_document().crdt)
+        self.node.send_to_nodes(self.doc_name, compression="zlib")
         self.rights[(str(node.host), str(node.port))] = False
 
     def insert(self, glyph: chr, index: int):

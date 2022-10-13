@@ -22,6 +22,8 @@ class Node(node.Node):
     def process_data(self, data, node):
         if isinstance(data, bytes):
             self.controller.update_crdt(data, node)
+        elif isinstance(data, str):
+            self.controller.view.doc_name = data
 
     # def debug_print(self, message):
     #     with open("debug.txt", "a") as f:

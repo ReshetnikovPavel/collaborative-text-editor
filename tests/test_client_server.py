@@ -17,7 +17,7 @@ class TestCursor(unittest.TestCase):
     def setUp(self) -> None:
         site_id = 12345
         model = Model(site_id)
-        controller = ControllerServer(site_id)
+        controller = ControllerServer(site_id, 'test_name')
 
         model.initialise(controller)
         controller.initialise(model, None)
@@ -58,6 +58,6 @@ class TestCursor(unittest.TestCase):
 
         time.sleep(1)
 
-        self.assertEqual(self.client1.view.lines, ['a'])
-        self.assertEqual(self.client2.view.lines, ['a'])
-        self.assertEqual(self.server.model.get_document().lines, ['a'])
+        self.assertEqual(self.client1.view.lines, 'a')
+        self.assertEqual(self.client2.view.lines, 'a')
+        self.assertEqual(self.server.model.get_document().lines, 'a')

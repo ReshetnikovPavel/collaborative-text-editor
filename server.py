@@ -11,7 +11,7 @@ if __name__ == "__main__":
         text = f.read()
     site_id = 12345
     model = Model(site_id)
-    controller = ControllerServer(site_id)
+    controller = ControllerServer(site_id, args.filename)
 
     model.initialise(controller)
     controller.initialise(model, None)
