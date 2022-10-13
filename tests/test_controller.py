@@ -41,7 +41,7 @@ class TestController(Base):
         self.controller.create_document(glyphs)
 
         actual = self.controller.view.lines
-        expected = [string]
+        expected = string
         self.assertEqual(actual, expected)
 
     def test_update_crdt(self):
@@ -53,7 +53,7 @@ class TestController(Base):
         crdt2 = self._create_another_crdt(string2)
         pickled_crdt2 = crdt2.pickle()
 
-        self.controller.update_crdt(pickled_crdt2)
+        self.controller.update_crdt(pickled_crdt2, None)
         actual = self.controller.view.lines
 
         self.assertTrue(string + string2 in actual
@@ -86,7 +86,7 @@ class TestController(Base):
         time.sleep(self.wait_time)
 
         actual = self.controller.view.lines
-        self.assertEqual(actual, ['Hello world'])
+        self.assertEqual(actual, 'Hello world')
         controller2.node.stop()
 
     def test_send_crdt(self):
@@ -112,8 +112,8 @@ class TestController(Base):
         actual = controller2.view.lines
         expected_possible_1 = string_to_add + string2
         expected_possible_2 = string2 + string_to_add
-        self.assertTrue([expected_possible_1] == actual
-                        or [expected_possible_2] == actual,
+        self.assertTrue(expected_possible_1 == actual
+                        or expected_possible_2 == actual,
                         f'actual: {actual}, expected:'
                         f' {expected_possible_1} or {expected_possible_2}')
         controller2.node.stop()
@@ -133,7 +133,7 @@ class TestController(Base):
         self.controller.insert('a', 1)
 
         actual = self.controller.view.lines
-        expected = ['Haello World']
+        expected = 'Haello World'
         self.assertEqual(actual, expected)
 
     def test_insert_but_other_node_also_updated(self):
@@ -151,7 +151,7 @@ class TestController(Base):
         time.sleep(self.wait_time)
 
         actual = controller2.view.lines
-        expected = ['Haello World']
+        expected = 'Haello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
 
@@ -170,7 +170,7 @@ class TestController(Base):
         time.sleep(self.wait_time)
 
         actual = controller2.view.lines
-        expected = ['Hllo World']
+        expected = 'Hllo World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
 
@@ -187,7 +187,7 @@ class TestController(Base):
         time.sleep(self.wait_time)
 
         actual = self.controller.view.lines
-        expected = ['Hello World']
+        expected = 'Hello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
 
@@ -214,7 +214,7 @@ class TestController(Base):
         time.sleep(3)
 
         actual = self.controller.view.lines
-        expected = ['Hello World']
+        expected = 'Hello World'
         self.assertEqual(actual, expected)
         controller2.node.stop()
         time.sleep(4)

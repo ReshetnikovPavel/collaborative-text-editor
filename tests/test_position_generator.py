@@ -131,7 +131,7 @@ class TestPosition(Base):
         position1 = Position([Identifier(1, 0), Identifier(2, 1)])
         position2 = Position([Identifier(1, 0), Identifier(2, 1)])
 
-        self.assertTrue(position1 == position2)
+        self.assertEqual(position1.ids, position2.ids)
 
     def test_compare_different_length(self):
         position1 = Position([Identifier(1, 0), Identifier(2, 1)])
@@ -208,7 +208,7 @@ class TestPosition(Base):
 
         actual = Position.get_max(site)
 
-        self.assertEqual(actual, expected)
+        self.assertEqual(actual.ids, expected.ids)
 
     def test_get_min(self):
         site = 0
@@ -216,12 +216,12 @@ class TestPosition(Base):
 
         actual = Position.get_min(site)
 
-        self.assertEqual(actual, expected)
+        self.assertEqual(actual.ids, expected.ids)
 
     def assert_generate(self, amount, site_id, expected):
         actual = list(position_generator.generate(amount, site_id))
 
-        self.assertEqual(actual, expected)
+        self.assertEqual(list(map(lambda x: x.ids, actual)), list(map(lambda x: x.ids, expected)))
 
     def test_generate_one(self):
         self.assert_generate(1, 0,

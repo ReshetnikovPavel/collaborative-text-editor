@@ -32,14 +32,14 @@ class TestCRDT(Base):
         char = 'a'
         crdt.insert('a', Position([Identifier(0, 0)]))
 
-        self.assertEqual(crdt.lines, [char])
+        self.assertEqual(crdt.lines, char)
 
     def test_positions(self):
         crdt = CRDT(0)
         position = Position([Identifier(0, 0)])
         crdt.insert('a', position)
 
-        self.assertEqual(list(crdt.positions), [position])
+        self.assertEqual(list(map(lambda x: x.ids, crdt.positions)), [position.ids])
 
     def test_insert(self):
         crdt = CRDT(0)
@@ -72,10 +72,10 @@ class TestCRDT(Base):
         pickled_crdt2 = crdt2.pickle()
         crdt1.merge(pickled_crdt2)
 
-        self.assertEqual(crdt1.lines, ['aa'])
+        self.assertEqual(crdt1.lines, 'aa')
         self.assertEqual(crdt1.positions, [position1, position2])
 
-        self.assertEqual(crdt2.lines, [char])
+        self.assertEqual(crdt2.lines, char)
         self.assertEqual(crdt2.positions, [position2])
 
     def test_insert_already_exists(self):
