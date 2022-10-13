@@ -1,16 +1,14 @@
 from typing import List
-from uuid import UUID
 
-from src.crdt import CRDT
 from src.document import Document
 
 
 class Model:
-    def __init__(self, site_id: UUID):
+    def __init__(self, site_id: int):
         self.controller = None
-        self.documents = []
         self.site_id = site_id
         self.current_document = Document([], self.site_id)
+        self.documents = [self.current_document]
 
     def initialise(self, controller: 'Controller'):
         self.controller = controller
@@ -28,8 +26,5 @@ class Model:
         self.current_document.update_crdt(pickled_crdt)
 
     def delete_current_document(self):
-        try:
-            self.documents.remove(self.current_document)
-        except Exception as e:
-            pass
+        self.documents.remove(self.current_document)
         self.current_document = Document([], self.site_id)

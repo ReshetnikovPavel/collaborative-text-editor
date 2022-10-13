@@ -2,31 +2,34 @@ import pickle
 from typing import Generator, List
 from uuid import UUID
 
-from src.sequence import Sequence
 from wrapt import synchronized
 
 from src.position_generator import Position
+from src.sequence import Sequence
 
 
 class CRDT:
-    def __init__(self, site_id: UUID):
+    def __init__(self, site_id: int):
         self._seq = Sequence(site_id)
 
     @property
     def site_id(self) -> int:
-        return self._seq.id
+        return self._seq.site_id
 
-    @synchronized
-    def get_elements(self) -> List[chr]:
-        return self._seq.elem_seq
 
+    @property
     @synchronized
-    def get_positions(self) -> List[Position]:
-        return self._seq.id_seq
+    def lines(self) -> List[str]:
+        return self._seq.to_string().splitlines()
+
+    @property
+    @synchronized
+    def positions(self) -> List[Position]:
+        return list(self._seq.ids)
 
     @synchronized
     def insert(self, element: chr, position: Position):
-        if self._seq.query(position):
+        if self._seq.contains_id(position):
             raise ValueError(f'Position already exists: {position}')
         self._seq.add(element, position)
 
@@ -38,7 +41,7 @@ class CRDT:
 
     @synchronized
     def remove(self, position: Position):
-        if not self._seq.query(position):
+        if not self._seq.contains_id(position):
             raise ValueError(f'Position does not exist: {position}')
         self._seq.remove(position)
 
@@ -47,11 +50,13 @@ class CRDT:
         seq = pickle.loads(other)
         self._seq.merge(seq)
 
+    @synchronized
+    def replace(self, other: bytes):
+        seq = pickle.loads(other)
+        self._seq = seq
+
     def __repr__(self):
         return f'CRDT({self._seq})'
 
-    @synchronized
     def pickle(self):
         return pickle.dumps(self._seq)
-
-
