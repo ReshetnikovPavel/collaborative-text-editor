@@ -74,7 +74,7 @@ class IndexPositionConverter:
 
     def _generate_position_between_index_and_next_index(self,
                                                         index) -> Position:
-        if  index >= len(self.crdt.positions):
+        if index >= len(self.crdt.positions):
             index = len(self.crdt.positions)-1
         return position_generator.generate_between(
             self.crdt.positions[index],

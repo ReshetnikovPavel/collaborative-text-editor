@@ -4,6 +4,7 @@ from curses import panel
 from cansi import Cansi
 
 from src.buffer import Buffer
+from src.pdf_convertor import to_pdf
 from src.cursor import Cursor
 from src.window import Window
 from src.popup import Popup
@@ -26,6 +27,12 @@ class Editor:
                              curses.LINES//4,
                              curses.COLS//4)
         self.history.hide()
+        self.blame = Popup("Blame",
+                             curses.LINES // 8,
+                             curses.COLS // 8,
+                             curses.LINES // 2 - curses.LINES // 16,
+                             curses.COLS // 2 - curses.COLS // 16)
+        self.blame.hide()
         self.screen_panel = panel.new_panel(self.screen)
         self.visual_mode = False
 
@@ -48,11 +55,13 @@ class Editor:
 
     def __draw_upper_status_bar(self) -> None:
         height, width = self.screen.getmaxyx()
-        filename = f"fib.py"
+        filename = self.controller.view.doc_name
         host, port = self.controller.get_host_port()
+        instruction = f"<F1> Change Mode | <F2> History | <F3> Blame | <F4> Save PDF | <F5> Save"
         address = f"[{host}:{port}]"
-        body = f"{filename} {address}".center(width)
-        status_bar = f"\033[7m{body}\033[0m"
+        # body = f"{instruction}".center(width)
+        space_count = width - len(instruction) - len(address) - len(filename) - 1
+        status_bar = f"\033[7m{instruction}{' '*space_count}{filename} {address}\033[0m"
 
         self.__cansi.addstr(0, 0, status_bar)
 
@@ -71,22 +80,16 @@ class Editor:
         self.screen.move(
             *self.window.get_translated_cursor_coordinates(self.cursor))
         self.screen.refresh()
-        # if self.history.is_active:
-        #     self.history.activate([f"log{i}" for i in range(50)])
-        #     self.history.activate(["log1", "log2", "log3", "log4"])
-        # self.screen.nodelay(False)
 
     def __handle_keypress(self, key: int) -> None:
         if key == curses.KEY_UP and not self.history.is_active:
             self.cursor.up(self.buffer)
             self.window.up(self.cursor)
             self.window.horizontal_scroll(self.cursor)
-            # self.history.handle_keypress(key)
         elif key == curses.KEY_DOWN and not self.history.is_active:
             self.cursor.down(self.buffer)
             self.window.down(self.buffer, self.cursor)
             self.window.horizontal_scroll(self.cursor)
-            # self.history.handle_keypress(key)
         elif key == curses.KEY_LEFT:
             self.cursor.left(self.buffer)
             self.window.up(self.cursor)
@@ -99,10 +102,9 @@ class Editor:
             if self.cursor.position == (0, 0):
                 return
             self.cursor.left(self.buffer)
-            try:
-                self.controller.remove(to_one_dimensional_index(self.cursor.position, self.buffer.lines))
-            except Exception as e:
-                pass
+            self.controller.remove(
+                to_one_dimensional_index(self.cursor.position,
+                                         self.buffer.lines))
         elif key == curses.KEY_DC:
             try:
                 if self.cursor.position < (self.buffer.bottom, len(self.buffer.lines[-1])):
@@ -113,22 +115,32 @@ class Editor:
             except Exception as e:
                 pass
         elif key == curses.KEY_ENTER or key == 10:
-            # try:
-            self.controller.insert("\n", to_one_dimensional_index(self.cursor.position, self.buffer.lines))
+            self.controller.insert("\n",
+                                   to_one_dimensional_index(
+                                       self.cursor.position,
+                                       self.buffer.lines))
             self.cursor.push_cursor_to_start_of_line(self.buffer)
-            # except Exception as e:
-            #     pass
-
-            # self.buffer.split(self.__cursor.position)
         elif key == curses.KEY_RESIZE:
             self.window = Window(curses.LINES - 1, curses.COLS - 1)
         elif key == curses.KEY_F2:
             self.history.is_active = not self.history.is_active
             while self.history.is_active:
-                self.history.activate([f"log{i}" for i in range(50)])
+                self.history.activate(open("server_history.txt").read().splitlines())
                 key = self.screen.getch()
                 self.history.handle_keypress(key)
                 self.__handle_keypress(key)
+        elif key == curses.KEY_F3:
+            self.blame.is_active = not self.blame.is_active
+            while self.blame.is_active:
+                blame_port = self.controller.blame(
+                    to_one_dimensional_index(self.cursor.position,
+                                             self.buffer.lines))
+                self.blame.activate([f"User PORT: {blame_port}"])
+                key = self.screen.getch()
+                self.blame.handle_keypress(key)
+                self.__handle_keypress(key)
+        elif key == curses.KEY_F4:
+            to_pdf(self.buffer.lines, self.controller.view.doc_name)
         elif key == curses.KEY_F1:
             self.visual_mode = not self.visual_mode
             self.__draw_lower_status_bar()
@@ -144,21 +156,18 @@ class Editor:
         elif self.visual_mode and key == ord('c'):
             self.visual_mode = False
             start = to_one_dimensional_index(self.start_pos, self.buffer.lines)
-            curr_pos = to_one_dimensional_index(self.cursor.position, self.buffer.lines)
-            pyperclip.copy("".join(self.controller.model.get_document().lines[start:curr_pos]))
+            curr_pos = to_one_dimensional_index(
+                self.cursor.position, self.buffer.lines)
+            pyperclip.copy("".join(
+                self.controller.model.get_document().lines[start:curr_pos]))
         elif ord(" ") <= key <= ord("~"):
-            # try:
-            with open("log.txt", "a") as f:
-                f.write(f"{chr(key)} {key} {self.cursor.position}\n{self.buffer.lines}\n")
-            self.controller.insert(chr(key), to_one_dimensional_index(self.cursor.position, self.buffer.lines))
+            self.controller.insert(chr(key),
+                                   to_one_dimensional_index(
+                                       self.cursor.position,
+                                       self.buffer.lines))
             self.cursor.right(self.buffer)
             self.window.down(self.buffer, self.cursor)
             self.window.horizontal_scroll(self.cursor)
-            # except Exception as e:
-            #     pass
-            # self.screen.touchwin()
-            # self.buffer.insert(self.__cursor.position, chr(key))
-
 
     def run(self) -> None:
         self.__draw_screen()
